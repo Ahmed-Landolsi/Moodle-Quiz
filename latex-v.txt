@@ -1,0 +1,70 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage[latin1]{inputenc}
+\title{Quiz-Test}
+\author{Hochschule Fulda}
+\date{\today}
+\begin{document}
+\maketitle{Quiz-Mathematik}
+
+%name= Quiz Khalifa /%
+
+
+%frage= (type="multichoice", name="Section Tittel", format="moodle_auto_format", shuffle=true, single=false, answernumbering=ABCD, hidden=0, penalty=0.5, defaultgrade=2.0) 
+
+\subsection{Section Tittel}
+Wellcome to LaTeXtoXML file converter
+\begin{itemize}
+\item cccc
+dsfd
+graphicxtr
+\item aaaa
+\item yes-bbbb   (richtige Antwort)
+
+%antwort=(fraction=100, format="moodle_auto_format", feedback="right answer") /%
+  
+\item qqqq
+$$\frac{1}{2\pi}\int_{-\infty}^{\infty}e^{-\frac{x^2}{2}}dx$$
+\item kkkk 
+\item yes-pppp
+
+%antwort=(fraction=100, format="moodle_auto_format", feedback="bad answer") /%
+
+\end{itemize}
+--------------------------
+
+%frage= (type="multichoice", name="frage2", single=false, format="moodle_auto_format", answernumbering="123", correctfeedback="this is the correct feedback", partiallycorrectfeedback="this is the partially correct feedback", incorrectfeedback="this is the incorect feedback") 
+\subsection{xcf}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua.
+Ut enim ad minim veniam,quis nostrud 
+exercitation
+\begin{itemize}
+\item 00
+\item yes-22
+33
+%antwort=(fraction=100) /%
+\item 11
+\end{itemize}
+-------------------------
+%frage= (type="multichoice", name="frage3", format="moodle_auto_format", shuffle=true, single=true, generalfeedback="this is the general feedback", hidden=1, penalty=0.2, defaultgrade=1.0) /%
+\subsection{xcf}
+jjlkjh
+\begin{itemize}
+\item aa
+%antwort=(fraction=100, feedback="t'es bete ou quoi??") /%
+\item bb
+\item cc
+\end{itemize}
+
+%frage= (type="multichoice", name="Test Frage", format="moodle_auto_format", shuffle=true, single=true, generalfeedback="this is the general feedback", hidden=1, penalty=0.2, defaultgrade=1.0) /%
+\subsection{xcf}
+jjlkjh
+\begin{itemize}
+\item hhhhhhh
+%antwort=(fraction=100,  /%
+\item bb
+\item xxxxx
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,53 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage[latin1]{inputenc}
+\title{Quiz-Test}
+\author{Hochschule Fulda}
+\date{\today}
+\begin{document}
+\maketitle{Quiz-Mathematik}
+
+
+
+\subsection{xcf}
+hihihihihihhi
+hahahahahahah
+\begin{itemize}
+\item 00
+\item 22
+\item 11
+\end{itemize}
+
+
+--------------
+
+
+
+\subsection{xcf}
+jj
+fdf
+fx
+xcx
+x
+
+
+
+ccx
+xgfxg
+
+
+cffd
+
+
+\begin{itemize}
+\item aa
+\item bb
+\item cc
+\end{itemize}
+
+
+
+
+
+
+\end{document}
