@@ -32,7 +32,7 @@ public class MultiChoiceQuestion {
     private final Feedback generalfeedback = new Feedback();
     
     @XmlElement(name="answer")
-    ArrayList<Answer> answers;     //Answer has : *fraction(int)(default:falseanswer=0 rightanswer=100)
+    ArrayList<Answer> answers;     //Answer has : *fraction(int)(default:falseanswer=0 rightanswer=100) 
  
     public static void main(String[] args){}
     public MultiChoiceQuestion() {

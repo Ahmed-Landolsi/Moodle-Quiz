@@ -33,7 +33,7 @@ public class Category {
 
     /**
      * @param text the text to set
-     */
+     */ 
     public void setText(String text) {
         this.text.setText(text);
     }

@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.*;
 
 /**
  *
- * @author foufou
+ * @author foufou 
  */
 @XmlRootElement
 public class Text {

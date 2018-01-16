@@ -250,7 +250,7 @@ public class TestRead {
                 quiz.setQuestions(MCQ);
                 System.out.printf("\n--Begin question--\n");
                 OutputToXml(quiz);
-                //correctXml();
+                //correctXml(); 
                 //OutprintObject(MCQ);
             }
         }
