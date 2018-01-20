@@ -4,6 +4,7 @@
  * and open the template in the editor. 
  */
 package javaapplication2;
+import java.util.ArrayList;
 import javax.xml.bind.annotation.*;
 //import java.util.ArrayList;
 
@@ -18,11 +19,31 @@ public class Answer {
     private final Feedback feedback = new Feedback();
     private String text;
     private String format = "moodle_auto_format";
-
+    private ArrayList<Image> images;
+    //private Image[] images;
     
     public static void main(String[] args){}
     
+    public Answer(){
+    this.images = new ArrayList<>();
+    }
+    
+    /**
+    * @return the images
+    */
+    @XmlElement(name="file") 
+    public ArrayList<Image> getImages() {
+        return images;
+    }
 
+    /**
+     * @param image the images to set
+     */
+    public void setImages(Image image) {
+        Image img = image;
+        this.images.add(img);
+    }
+    
     /**
      * @return the fraction
      */

@@ -5,9 +5,18 @@
  */
 package javaapplication2;
 
+import java.awt.BorderLayout;
 import java.io.File;
+import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import java.awt.*;
+import java.awt.event.*;
 /**
  *
  * @author foufou
@@ -19,6 +28,7 @@ public class LatexToXmlForm extends javax.swing.JFrame {
      */
     public LatexToXmlForm() {
         initComponents();
+        jTextField1.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\JavaApplication2\\latex-v.txt");
     }
 
     /**
@@ -120,6 +130,7 @@ public class LatexToXmlForm extends javax.swing.JFrame {
         String st = jTextField1.getText();
         TestRead tr = new TestRead(st);
         
+       
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

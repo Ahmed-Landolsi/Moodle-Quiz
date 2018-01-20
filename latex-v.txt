@@ -13,7 +13,7 @@
 %frage= (type="multichoice", name="Section Tittel", format="moodle_auto_format", shuffle=true, single=false, answernumbering=ABCD, hidden=0, penalty=0.5, defaultgrade=2.0) 
 
 \subsection{Section Tittel}
-Wellcome to LaTeXtoXML file converter
+Wellcome to LaTeXtoXML file converter \includegraphics[width=50pt, heigth=50mm]{C:/Users/foufou/Desktop/LatexUnits.PNG} gjhjhlkhfsfsfsö ksjö \includegraphics[heigth=5cm , width=3cm]{C:/Users/foufou/Desktop/LatexUnits.PNG} dsjfösgjögs  \includegraphics[width=5in]{C:/Users/foufou/Desktop/LatexUnits.PNG}
 \begin{itemize}
 \item cccc
 \item aaaa
@@ -33,7 +33,8 @@ $$\frac{1}{2\pi}\int_{-\infty}^{\infty}e^{-\frac{x^2}{2}}dx$$
 
 
 \subsection{xcf}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim ad minim veniam,quis nostrud. 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit
+sed do eiusmod tempor incididunt ut labore et dolore magnaaliqua Ut enim ad minim veniam,quis nostrud. 
 exercitation
 \begin{itemize}
 \item 00
@@ -46,12 +47,12 @@ exercitation
 
 
 \subsection{xcf}	
-Frage text hier
+Frage text hier 
 \begin{itemize} 	
 \item Antwort1 text hier
+\item Antwort2 text hier 
 %antwort=(fraction=100, feedback="t'es bete ou quoi??") /%
-\item Antwort2 text hier
-\item Antwort3 text hier
+\item Antwort3 text hier 
 \end{itemize}      	
 ------------------------
 %frage= (type="multichoice", name="Test Frage", format="moodle_auto_format", shuffle=true, single=true, generalfeedback="this is the general feedback", hidden=1, penalty=0.2, defaultgrade=1.0) /%
@@ -60,10 +61,10 @@ Frage text hier
 \subsection{xcf}
 Frage text hier
 \begin{itemize}
-\item Antwort1 text hie
+\item Antwort1 text hier 
 %antwort=(fraction=100)  /%
 \item Antwort2 text hier
-\item Antwort3 text hier
+\item Antwort3 text hier \includegraphics[heigth=5cm , width=3cm]{http://www.freepngimg.com/download/facebook/1-2-facebook-download-png.png} xxxxx \includegraphics[heigth=5cm , width=3cm]{https://orig00.deviantart.net/de98/f/2013/201/3/0/png__los_minions__by_annnto-d6ebcmp.png}
 \end{itemize}
 
 \end{document}

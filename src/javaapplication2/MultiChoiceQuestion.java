@@ -13,8 +13,10 @@ import java.util.ArrayList;
  */
 @XmlRootElement(name="question")
 @XmlAccessorType(XmlAccessType.PROPERTY)
-@XmlType(propOrder={"name", "questiontext" , "generalfeedback", "defaultgrade", "penalty", "hidden", "single", "shuffleanswers", "answernumbering", "correctfeedback", "partiallycorrectfeedback", "incorrectfeedback", "answers"})
+@XmlType(propOrder={"name", "questiontext", "generalfeedback", "defaultgrade", "penalty", "hidden", "single", "shuffleanswers", "answernumbering", "correctfeedback", "partiallycorrectfeedback", "incorrectfeedback", "answers"})
 public class MultiChoiceQuestion {
+
+    
     private boolean single = true;
     private boolean shuffleanswers = true;
     private int hidden = 0;
@@ -24,6 +26,10 @@ public class MultiChoiceQuestion {
     private String answernumbering  = "123";
     private float penalty;
     private float defaultgrade;
+    
+ 
+    //private ArrayList<Image> images;
+    
     private final QuestionName name = new QuestionName();
     private final QuestionText questiontext = new QuestionText();
     private final Feedback correctfeedback = new Feedback();
@@ -49,15 +55,6 @@ public class MultiChoiceQuestion {
         Answer ans = answer;
         this.answers.add(ans);
     } 
-//    public void answerData(String feedback, String  text, int fraction) {
-//        Answer answer = new Answer();
-//        answer.setFraction(fraction);  
-//        answer.setText(text); 
-//        answer.setFeedback(feedback); 
-//        answers.add(answer);
-//    }
-    
-
 
     /**
      * @return the format
@@ -251,6 +248,11 @@ public class MultiChoiceQuestion {
         this.hidden = hidden;
     }
 
+    /**
+     * @param image the images to set
+     */
+    public void setImages(Image image) {
+        this.questiontext.setImages(image);
+    }    
 
- 
 }
