@@ -1,5 +1,4 @@
 package javaapplication2;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -7,11 +6,6 @@ import javax.xml.bind.Marshaller;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.ByteBuffer;
-import java.nio.file.StandardCopyOption;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -20,13 +14,6 @@ import static java.util.Objects.isNull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.*;
-import javax.imageio.ImageIO;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import sun.misc.IOUtils;
-import sun.net.www.http.*;
 
 
 
@@ -41,6 +28,9 @@ public class TestRead {
         Pattern patternQuestionText;
         Pattern patternAnswerTextEnd;
         Pattern patternIsMC;
+        Pattern patternIsTF;
+        Pattern patternIsSA;
+        Pattern patternIsNUM;
         Pattern patternCategory;
         Matcher matcherQuestion;
         Matcher matcherAnswer;
@@ -48,6 +38,9 @@ public class TestRead {
         Matcher matcherAnswerText;
         Matcher matcherAnswerTextEnd;
         Matcher matcherIsMc;
+        Matcher matcherIsTF;
+        Matcher matcherIsSA;
+        Matcher matcherIsNUM;
         Matcher matcherCategory;
         patternCategory = Pattern.compile("^%name=");
         patternQuestion = Pattern.compile("^%frage=");
@@ -56,6 +49,9 @@ public class TestRead {
         patternAnswerText = Pattern.compile("[^\\w]begin\\{itemize\\}");
         patternAnswerTextEnd = Pattern.compile("[^\\w]end\\{itemize\\}");
         patternIsMC = Pattern.compile("\"multichoice\"");
+        patternIsTF = Pattern.compile("\"truefalse\"");
+        patternIsSA = Pattern.compile("\"shortanswer\"");
+        patternIsNUM = Pattern.compile("\"numerical\"");
 
         try {
             FileInputStream fstream = new FileInputStream(file);
@@ -70,6 +66,9 @@ public class TestRead {
                 int answerWriter = 0;
                 int questionWriter = 0;
                 boolean IsMcQuestion = false;
+                boolean IsTFQuestion = false;
+                boolean IsSAQuestion = false;
+                boolean IsNUMQuestion = false;
                 List<String> questionParamsArray = new ArrayList<>();
                 List<String> questionArray = new ArrayList<>();
                 List<String> answerArray = new ArrayList<>();
@@ -83,6 +82,9 @@ public class TestRead {
                     matcherQuestionText = patternQuestionText.matcher(strLine);
                     matcherAnswerTextEnd = patternAnswerTextEnd.matcher(strLine);
                     matcherIsMc = patternIsMC.matcher(strLine);
+                    matcherIsTF = patternIsTF.matcher(strLine);
+                    matcherIsSA = patternIsSA.matcher(strLine);
+                    matcherIsNUM = patternIsNUM.matcher(strLine);
                     matcherCategory = patternCategory.matcher(strLine);
                     
                     if (questionWriter == 1) {
@@ -102,9 +104,27 @@ public class TestRead {
                             questionParams.add(questionParamsArray);
                             questionParamsArray = new ArrayList<>();
                         }
+                        if (matcherIsTF.find()) { //findet "truefalse"
+                            IsTFQuestion = true;
+                            questionParamsArray.add(strLine);
+                            questionParams.add(questionParamsArray);
+                            questionParamsArray = new ArrayList<>();
+                        }
+                        if (matcherIsSA.find()) { //findet "shortanswer"
+                            IsSAQuestion = true;
+                            questionParamsArray.add(strLine);
+                            questionParams.add(questionParamsArray);
+                            questionParamsArray = new ArrayList<>();
+                        }
+                        if (matcherIsNUM.find()) { //findet "numerical"
+                            IsNUMQuestion = true;
+                            questionParamsArray.add(strLine);
+                            questionParams.add(questionParamsArray);
+                            questionParamsArray = new ArrayList<>();
+                        }
                     }
                     
-                    if (IsMcQuestion) {
+                    if (IsMcQuestion || IsTFQuestion || IsSAQuestion || IsNUMQuestion) {
                         if (matcherQuestionText.find()) { //findet \subsection{}
                             questionWriter = 1;
                         }
@@ -125,6 +145,9 @@ public class TestRead {
                         if (matcherAnswerTextEnd.find()) { //findet \end{itemize}
                             answerWriter = 0;
                             IsMcQuestion = false;
+                            IsTFQuestion = false;
+                            IsSAQuestion = false;
+                            IsNUMQuestion = false;
                             if (!answerArray.isEmpty()) {
                                 answerArray.remove(answerArray.size() - 1);
                                 response.add(answerArray);
@@ -137,22 +160,39 @@ public class TestRead {
             }
             List<String> myList = new ArrayList<>();
             Pattern patternxy = Pattern.compile("\\(([^)]+)\\)"); //read params between () in %frage=(...)/% Line
-            for (List<String> el : questionParams) {
-                for (String e : el) {
-                    Matcher matcherxy = patternxy.matcher(e);
-                    if (matcherxy.find())
-                    {
-                        String tmp = matcherxy.group(1);
-                        String[] kk = tmp.split(", "); // split question params with ","
-                        myList.add(Arrays.toString(kk)); // add params array in one List of all questions params
-                    }
+            questionParams.forEach((List<String> el) -> {
+                el.stream().map((e) -> patternxy.matcher(e)).filter((matcherxy) -> (matcherxy.find())).map((matcherxy) -> matcherxy.group(1)).map((tmp) -> tmp.split(", ")).forEachOrdered((kk) -> {
+                    // split question params with ","
+                    myList.add(Arrays.toString(kk)); // add params array in one List of all questions params
+                });
+            });
+            System.out.println("questParams final: " + myList);  // List of String myList.get(0) --> string contains first question params
+            System.out.println("questions final: " + question);  // List of List of String question.get(0) --> list of string contains first question text
+            System.out.println("responses final: " + response);  // List of List of String response.get(0) --> list of string contains first question answers
+            Quiz quiz = new Quiz();
+            quiz.setCategory(category);
+            System.out.println("\n----------Quiz Startet-------------\n");
+            for (int i = 0; i < myList.size(); i++) {
+                if (myList.get(i).contains("multichoice")){
+                    MultiChoiceQuestion MCQ = null;     
+                    MCQ = MultichoiceFetcher(myList.get(i),question.get(i),response.get(i));
+                    quiz.setQuestions(MCQ);
+                } else if (myList.get(i).contains("truefalse")){
+                    TrueFalseQuestion TFQ = null;     
+                    TFQ = TrueFalseFetcher(myList.get(i),question.get(i),response.get(i));
+                    quiz.setQuestions(TFQ);
+                } else if (myList.get(i).contains("shortanswer")){
+                    ShortAnswerQuestion SAQ = null;     
+                    SAQ = ShortAnswerFetcher(myList.get(i),question.get(i),response.get(i));
+                    quiz.setQuestions(SAQ);
+                } else if (myList.get(i).contains("numerical")){
+                    NumericalQuestion NUMQ = null;     
+                    NUMQ = NumericalFetcher(myList.get(i),question.get(i),response.get(i));
+                    quiz.setQuestions(NUMQ);
                 }
+                
             }
-            System.out.println("questParams final: " + myList); 
-            System.out.println("questions final: " + question);
-            System.out.println("responses final: " + response);
-            
-            MultichoiceFetcher(category,myList,question,response);
+            OutputToXml(quiz);
         }
         catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
@@ -160,26 +200,22 @@ public class TestRead {
         
     }
    
-    public static void MultichoiceFetcher (String category, List<String> paramsList,  ArrayList<List<String>> questionsList, ArrayList<List<String>> answersList) throws IOException{
-        Pattern pi;
-        pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})"); //  detect {path}
-        Pattern patternParamType = Pattern.compile("type=\"multichoice\"");
-        Quiz quiz = new Quiz();
-        System.out.println("\n----------Quiz Startet-------------\n");
-        quiz.setCategory(category);
-        MultiChoiceQuestion MCQ = null;        
-       
-        for (int i = 0; i < paramsList.size(); i++) {
-            Matcher matcherParamType = patternParamType.matcher(paramsList.get(i));
-            String[] split = paramsList.get(i).split(", ");
-            String QuestionTextJoined = String.join("<br>", questionsList.get(i));
+    public static MultiChoiceQuestion MultichoiceFetcher (String paramsList,  List<String> questionsList, List<String> answersList) throws IOException{
+            Pattern pi;
+            pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})"); //  detect {path}
+            Pattern patternParamType = Pattern.compile("type=\"multichoice\"");
+            MultiChoiceQuestion MCQ = null; 
+            Matcher matcherParamType = patternParamType.matcher(paramsList);
+            String[] split = paramsList.split(", ");
+            String QuestionTextJoined = String.join("<br>", questionsList);
             String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
-            String AswerTextJoined = String.join("<br>", answersList.get(i));
+            String AswerTextJoined = String.join("<br>", answersList);
             String[] parsedString = AswerTextJoined.split("\\\\item");
             Pattern p = Pattern.compile("%antwort=(.*?)/%");
             if (matcherParamType.find()) {
                 MCQ = new MultiChoiceQuestion();
+                //MCQ.setType("multichoice");
                 MCQ.setQuestiontext(QuestionTextJoinedProcessed);
                 if(mi.find()) {
                     List<String[]> imgs = imageAdapter(QuestionTextJoinedProcessed);
@@ -236,12 +272,14 @@ public class TestRead {
                     if ("penalty".equals(parameter[0])) {
                         MCQ.setPenalty(Float.parseFloat(parameter[1].trim()));
                     }
+                   
+
                 }
             }
             
             for (String answer : parsedString) {
                 if (!answer.isEmpty() && !isNull(answer)) {
-                    String newstr = answer.replaceAll("(<br>%antwort)[^&]*(/%<br>)", "");
+                    String newstr = answer.replaceAll("(<br>%antwort)[^&]*(\\%<br>)", "");
                     Answer answerObj = new Answer();
                     Matcher mia = pi.matcher(newstr); 
                     answerObj.setText("<p>" + newstr + "<br></p>\n");
@@ -280,14 +318,415 @@ public class TestRead {
                     }
                 }
             }
-            
-            if (MCQ != null) {
-                quiz.setQuestions(MCQ);
-                System.out.printf("\n--Begin question--\n");
-                OutputToXml(quiz);
-            }
-        }
+
+            System.out.printf("\n--Begin question--\n");
+            return MCQ;
     }
+    
+    public static TrueFalseQuestion TrueFalseFetcher (String paramsList,  List<String> questionsList, List<String> answersList) throws IOException{
+            Pattern pi;
+            pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})"); //  detect {path}
+            Pattern patternParamType = Pattern.compile("type=\"truefalse\"");
+            TrueFalseQuestion TFQ = null; 
+            Matcher matcherParamType = patternParamType.matcher(paramsList);
+            String[] split = paramsList.split(", ");
+            String QuestionTextJoined = String.join("<br>", questionsList);
+            String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
+            Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
+            String AswerTextJoined = String.join(" ", answersList);
+            String[] parsedString = AswerTextJoined.split("\\\\item");
+            Pattern p = Pattern.compile("%antwort=(.*?)/%");
+            if (matcherParamType.find()) {
+                TFQ = new TrueFalseQuestion();
+                TFQ.setQuestiontext(QuestionTextJoinedProcessed);
+                if(mi.find()) {
+                    List<String[]> imgs = imageAdapter(QuestionTextJoinedProcessed);
+
+
+                    for (String[] img : imgs) {
+                        Image image = new Image();
+                        image.setName(img[0]);
+                        image.setEncodedstring(img[1]);
+                        TFQ.setQuestiontext(img[2]);
+                        TFQ.setImages(image);
+                    }
+                }
+                
+            }
+            
+            for (String split1 : split) {
+                String[] parameter = paramSplitter(split1);
+                if (TFQ != null) {
+                    if ("name".equals(parameter[0])) {
+                        TFQ.setName(parameter[1]);
+                    }
+//                    if ("single".equals(parameter[0])) {
+//                        boolean bool = Boolean.parseBoolean(parameter[1].trim());
+//                        TFQ.setSingle(bool);
+//                    }
+//                    if ("shuffle".equals(parameter[0])) {
+//                        TFQ.setShuffleanswers(Boolean.parseBoolean(parameter[1].trim()));
+//                    }
+                    if ("format".equals(parameter[0])) {
+                        TFQ.setFormat(parameter[1]);
+                    }
+//                    if ("answernumbering".equals(parameter[0])) {
+//                        TFQ.setAnswernumbering(parameter[1]);
+//                    }
+                    if ("correctfeedback".equals(parameter[0])) {
+                        TFQ.setCorrectfeedback(parameter[1]);
+                    }
+                    if ("partiallycorrectfeedback".equals(parameter[0])) {
+                        TFQ.setPartiallycorrectfeedback(parameter[1]);
+                    }
+                    if ("incorrectfeedback".equals(parameter[0])) {
+                        TFQ.setIncorrectfeedback(parameter[1]);
+                    }
+                    if ("generalfeedback".equals(parameter[0])) {
+                        TFQ.setGeneralfeedback(parameter[1]);
+                    }
+                    if ("hidden".equals(parameter[0])) {
+                        TFQ.setHidden(Integer.parseInt(parameter[1].trim()));
+                    }
+                    if ("defaultgrade".equals(parameter[0])) {
+                        TFQ.setDefaultgrade(Float.parseFloat(parameter[1].trim()));
+                    }
+                    if ("penalty".equals(parameter[0])) {
+                        TFQ.setPenalty(Float.parseFloat(parameter[1].trim()));
+                    }
+                   
+
+                }
+            }
+            
+            for (String answer : parsedString) {
+                if (!answer.isEmpty() && !isNull(answer)) {
+                    //System.out.println("answer befor:"+answer);
+                    String newstr = answer.replaceAll("(%antwort)[^&]*(\\%)", "");
+                    //System.out.println("answer after:"+answer);
+                    Answer answerObj = new Answer();
+                    //Matcher mia = pi.matcher(newstr);
+                    //newstr = answer.replaceAll("<br>","");
+                    answerObj.setText(newstr.trim());
+//                    if (mia.find()) {
+//                        List<String[]> imgs = imageAdapter(newstr);
+//                        imgs.forEach((img) -> {
+//                            Image image = new Image();
+//                            image.setName(img[0]);
+//                            image.setEncodedstring(img[1]);
+//                            answerObj.setText(img[2]);
+//                            answerObj.setImages(image);
+//                        });
+//                    }
+                    Matcher m1 = p.matcher(answer);
+                    while (m1.find()) {
+                        String[] answerParams = new String[1];
+                        answerParams[0] = m1.group(1);
+                        if (answerParams[0].contains(",")) {
+                            answerParams = m1.group(1).split(", ");
+                        }
+                        for (String ap : answerParams) {
+                            String[] parameterAnswer = paramSplitter(ap);
+                            if ("fraction".equals(parameterAnswer[0])) {
+                                answerObj.setFraction(Integer.parseInt(parameterAnswer[1].trim()));
+                            }
+                            if ("format".equals(parameterAnswer[0])) {
+                                answerObj.setFormat(parameterAnswer[1]);
+                            }
+                            if ("feedback".equals(parameterAnswer[0])) {
+                                answerObj.setFeedback(parameterAnswer[1]);
+                            }
+                        }
+                    }
+                    if (TFQ != null) {
+                        TFQ.setAnswer(answerObj);
+                    }
+                }
+            }
+
+            System.out.printf("\n--Begin question--\n");
+            return TFQ;
+    }
+    
+    public static ShortAnswerQuestion ShortAnswerFetcher (String paramsList,  List<String> questionsList, List<String> answersList) throws IOException{
+            Pattern pi;
+            pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})"); //  detect {path}
+            Pattern patternParamType = Pattern.compile("type=\"shortanswer\"");
+            ShortAnswerQuestion SAQ = null; 
+            Matcher matcherParamType = patternParamType.matcher(paramsList);
+            String[] split = paramsList.split(", ");
+            String QuestionTextJoined = String.join("<br>", questionsList);
+            String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
+            Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
+            String AswerTextJoined = String.join("<br>", answersList);
+            String[] parsedString = AswerTextJoined.split("\\\\item");
+            Pattern p = Pattern.compile("%antwort=(.*?)/%");
+            if (matcherParamType.find()) {
+                SAQ = new ShortAnswerQuestion();
+                //MCQ.setType("multichoice");
+                SAQ.setQuestiontext(QuestionTextJoinedProcessed);
+                if(mi.find()) {
+                    List<String[]> imgs = imageAdapter(QuestionTextJoinedProcessed);
+
+
+                    for (String[] img : imgs) {
+                        Image image = new Image();
+                        image.setName(img[0]);
+                        image.setEncodedstring(img[1]);
+                        SAQ.setQuestiontext(img[2]);
+                        SAQ.setImages(image);
+                    }
+                }
+                
+            }
+            
+            for (String split1 : split) {
+                String[] parameter = paramSplitter(split1);
+                if (SAQ != null) {
+                    if ("name".equals(parameter[0])) {
+                        SAQ.setName(parameter[1]);
+                    }
+                    if ("usecase".equals(parameter[0])) {
+                        SAQ.setUsecase(Integer.parseInt(parameter[1].trim()));
+                    }
+//                    if ("single".equals(parameter[0])) {
+//                        boolean bool = Boolean.parseBoolean(parameter[1].trim());
+//                        SAQ.setSingle(bool);
+//                    }
+//                    if ("shuffle".equals(parameter[0])) {
+//                        SAQ.setShuffleanswers(Boolean.parseBoolean(parameter[1].trim()));
+//                    }
+                    if ("format".equals(parameter[0])) {
+                        SAQ.setFormat(parameter[1]);
+                    }
+//                    if ("answernumbering".equals(parameter[0])) {
+//                        SAQ.setAnswernumbering(parameter[1]);
+//                    }
+                    if ("correctfeedback".equals(parameter[0])) {
+                        SAQ.setCorrectfeedback(parameter[1]);
+                    }
+                    if ("partiallycorrectfeedback".equals(parameter[0])) {
+                        SAQ.setPartiallycorrectfeedback(parameter[1]);
+                    }
+                    if ("incorrectfeedback".equals(parameter[0])) {
+                        SAQ.setIncorrectfeedback(parameter[1]);
+                    }
+                    if ("generalfeedback".equals(parameter[0])) {
+                        SAQ.setGeneralfeedback(parameter[1]);
+                    }
+                    if ("hidden".equals(parameter[0])) {
+                        SAQ.setHidden(Integer.parseInt(parameter[1].trim()));
+                    }
+                    if ("defaultgrade".equals(parameter[0])) {
+                        SAQ.setDefaultgrade(Float.parseFloat(parameter[1].trim()));
+                    }
+                    if ("penalty".equals(parameter[0])) {
+                        SAQ.setPenalty(Float.parseFloat(parameter[1].trim()));
+                    }
+                   
+
+                }
+            }
+            
+            for (String answer : parsedString) {
+                if (!answer.isEmpty() && !isNull(answer)) {
+                    //<br>%antwort=(fraction=100, feedback="t'es bete ou quoi??") /%<br>
+                    String newstr = answer.replaceAll("(<br>%antwort)[^&]*(\\%<br>)", "");
+                    Answer answerObj = new Answer();
+                    //Matcher mia = pi.matcher(newstr);
+                    //newstr = answer.replaceAll("<br>","");
+                    
+                    answerObj.setText(newstr.trim());
+//                    if (mia.find()) {
+//                        List<String[]> imgs = imageAdapter(newstr);
+//                        imgs.forEach((img) -> {
+//                            Image image = new Image();
+//                            image.setName(img[0]);
+//                            image.setEncodedstring(img[1]);
+//                            answerObj.setText(img[2]);
+//                            answerObj.setImages(image);
+//                        });
+//                    }
+                    Matcher m1 = p.matcher(answer);
+                    while (m1.find()) {
+                        String[] answerParams = new String[1];
+                        answerParams[0] = m1.group(1);
+                        if (answerParams[0].contains(",")) {
+                            answerParams = m1.group(1).split(", ");
+                        }
+                        for (String ap : answerParams) {
+                            String[] parameterAnswer = paramSplitter(ap);
+                            if ("fraction".equals(parameterAnswer[0])) {
+                                answerObj.setFraction(Integer.parseInt(parameterAnswer[1].trim()));
+                            }
+                            if ("format".equals(parameterAnswer[0])) {
+                                answerObj.setFormat(parameterAnswer[1]);
+                            }
+                            if ("feedback".equals(parameterAnswer[0])) {
+                                answerObj.setFeedback(parameterAnswer[1]);
+                            }
+                        }
+                    }
+                    if (SAQ != null) {
+                        SAQ.setAnswer(answerObj);
+                    }
+                }
+            }
+
+            System.out.printf("\n--Begin question--\n");
+            return SAQ;
+    }
+    
+    public static NumericalQuestion NumericalFetcher (String paramsList,  List<String> questionsList, List<String> answersList) throws IOException{
+            Pattern pi;
+            pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})"); //  detect {path}
+            Pattern patternParamType = Pattern.compile("type=\"numerical\"");
+            NumericalQuestion NUMQ = null; 
+            Matcher matcherParamType = patternParamType.matcher(paramsList);
+            String[] split = paramsList.split(", ");
+            String QuestionTextJoined = String.join("<br>", questionsList);
+            String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
+            Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
+            String AswerTextJoined = String.join("<br>", answersList);
+            String[] parsedString = AswerTextJoined.split("\\\\item");
+            Pattern p = Pattern.compile("%antwort=(.*?)/%");
+            if (matcherParamType.find()) {
+                NUMQ = new NumericalQuestion();
+                //MCQ.setType("multichoice");
+                NUMQ.setQuestiontext(QuestionTextJoinedProcessed);
+                if(mi.find()) {
+                    List<String[]> imgs = imageAdapter(QuestionTextJoinedProcessed);
+
+
+                    for (String[] img : imgs) {
+                        Image image = new Image();
+                        image.setName(img[0]);
+                        image.setEncodedstring(img[1]);
+                        NUMQ.setQuestiontext(img[2]);
+                        NUMQ.setImages(image);
+                    }
+                }
+                
+            }
+            
+            for (String split1 : split) {
+                String[] parameter = paramSplitter(split1);
+                if (NUMQ != null) {
+                    if ("name".equals(parameter[0])) {
+                        NUMQ.setName(parameter[1]);
+                    }
+                    if ("units".equals(parameter[0])) {
+                        String[] strunit = new String[1];
+                        if(parameter[1].contains("/")){
+                            strunit = parameter[1].split("/");
+                        }else{
+                            strunit[0] = parameter[1];
+                        }
+                        //Unit[] unitarray;
+                        for (String strunit1 : strunit) {
+                            Unit unit = new Unit();
+                            String[] str2 = strunit1.split(":");
+                            unit.setUnit_name(str2[0].trim());
+                            unit.setMultiplier(Integer.parseInt(str2[1]));
+                            //if(unit != null){
+                            NUMQ.setUnits(unit);
+                            //}
+                        }
+                    }
+                    if ("unitgradingtype".equals(parameter[0])) {
+                        NUMQ.setUnitgradingtype(Integer.parseInt(parameter[1].trim()));
+                    }
+                    if ("unitpenalty".equals(parameter[0])) {
+                        NUMQ.setUnitpenalty(Float.parseFloat(parameter[1].trim()));
+                    }                  
+                    if ("showunits".equals(parameter[0])) {
+                        NUMQ.setShowunits(Integer.parseInt(parameter[1].trim()));
+                    }
+                    if ("unitsleft".equals(parameter[0])) {
+                        NUMQ.setUnitsleft(Integer.parseInt(parameter[1].trim()));
+                    }
+                    if ("format".equals(parameter[0])) {
+                        NUMQ.setFormat(parameter[1]);
+                    }
+                    if ("correctfeedback".equals(parameter[0])) {
+                        NUMQ.setCorrectfeedback(parameter[1]);
+                    }
+                    if ("partiallycorrectfeedback".equals(parameter[0])) {
+                        NUMQ.setPartiallycorrectfeedback(parameter[1]);
+                    }
+                    if ("incorrectfeedback".equals(parameter[0])) {
+                        NUMQ.setIncorrectfeedback(parameter[1]);
+                    }
+                    if ("generalfeedback".equals(parameter[0])) {
+                        NUMQ.setGeneralfeedback(parameter[1]);
+                    }
+                    if ("hidden".equals(parameter[0])) {
+                        NUMQ.setHidden(Integer.parseInt(parameter[1].trim()));
+                    }
+                    if ("defaultgrade".equals(parameter[0])) {
+                        NUMQ.setDefaultgrade(Float.parseFloat(parameter[1].trim()));
+                    }
+                    if ("penalty".equals(parameter[0])) {
+                        NUMQ.setPenalty(Float.parseFloat(parameter[1].trim()));
+                    }
+                   
+
+                }
+            }
+            
+            for (String answer : parsedString) {
+                if (!answer.isEmpty() && !isNull(answer)) {
+                    //<br>%antwort=(fraction=100, feedback="t'es bete ou quoi??") /%<br>
+                    String newstr = answer.replaceAll("(<br>%antwort)[^&]*(\\%<br>)", "");
+                    AnswerNumerical answerObj = new AnswerNumerical();
+                    //Matcher mia = pi.matcher(newstr);
+                    //newstr = answer.replaceAll("<br>","");
+                    
+                    answerObj.setText(newstr.trim());
+//                    if (mia.find()) {
+//                        List<String[]> imgs = imageAdapter(newstr);
+//                        imgs.forEach((img) -> {
+//                            Image image = new Image();
+//                            image.setName(img[0]);
+//                            image.setEncodedstring(img[1]);
+//                            answerObj.setText(img[2]);
+//                            answerObj.setImages(image);
+//                        });
+//                    }
+                    Matcher m1 = p.matcher(answer);
+                    while (m1.find()) {
+                        String[] answerParams = new String[1];
+                        answerParams[0] = m1.group(1);
+                        if (answerParams[0].contains(",")) {
+                            answerParams = m1.group(1).split(", ");
+                        }
+                        for (String ap : answerParams) {
+                            String[] parameterAnswer = paramSplitter(ap);
+                            if ("fraction".equals(parameterAnswer[0])) {
+                                answerObj.setFraction(Integer.parseInt(parameterAnswer[1].trim()));
+                            }
+                            if ("format".equals(parameterAnswer[0])) {
+                                answerObj.setFormat(parameterAnswer[1]);
+                            }
+                            if ("feedback".equals(parameterAnswer[0])) {
+                                answerObj.setFeedback(parameterAnswer[1]);
+                            }
+                            if ("tolerance".equals(parameterAnswer[0])) {
+                                answerObj.setTolerance(Integer.parseInt(parameterAnswer[1].trim()));
+                            }
+                        }
+                    }
+                    if (NUMQ != null) {
+                        NUMQ.setAnswernum(answerObj);
+                    }
+                }
+            }
+
+            System.out.printf("\n--Begin question--\n");
+            return NUMQ;
+    }
+    
+    
     
     public static String[] paramSplitter(String str){
         String paramstring;
@@ -444,5 +883,9 @@ public class TestRead {
         return Result;
     }
 
+//      private void updateTextArea(final String text) {
+
+//      
+//      }
 
 }

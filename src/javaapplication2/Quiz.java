@@ -15,32 +15,25 @@ import javax.xml.bind.annotation.*;
  * @author foufou
  */
 @XmlRootElement
-//@XmlType(name="foo")
+
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class Quiz {
   
     private final Category category = new Category();
-    ArrayList<MultiChoiceQuestion> questions;
+    ArrayList<Question> questions;
 
-//    @XmlAttribute
-//    private String type = "category";
-    public static void main(String[] args){}
+    public static void main(String[] args){
+    
+    }
 
-    public Quiz() {
+    public  Quiz() {
         this.questions = new ArrayList<>();
     }
     /**
      * @return the category
      */
-//    @XmlElementWrapper (
-//    name = "##default", 
-//    namespace = "##default", 
-//    nillable = false
-//    )
-    //@XmlAttachmentRef(name="type")
    
     @XmlElement(name="question")
-    //@XmlAnyElement(value = TextDomHandler.class)
     public Category getCategory() {
         
         return category;
@@ -55,19 +48,26 @@ public class Quiz {
         this.category.setText(text);
     }
 
+    
+    @XmlElements({
+    @XmlElement(name="question", type=TrueFalseQuestion.class),
+    @XmlElement(name="question", type=ShortAnswerQuestion.class),
+    @XmlElement(name="question", type=MultiChoiceQuestion.class),
+    @XmlElement(name="question", type=NumericalQuestion.class)
+    })
     /**
      * @return the questions
      */
-    @XmlElement(name="question")
-    public List<MultiChoiceQuestion> getQuestions() {
+    //@XmlElement(name="question")
+    public List<Question> getQuestions() {
         return questions;
     }
 
     /**
      * @param question the questions to set
      */
-    public void setQuestions(MultiChoiceQuestion question) {
-        MultiChoiceQuestion mcq = question;
+    public void setQuestions(Question question) {
+        Question mcq = question;
         this.questions.add(mcq);
     }
 

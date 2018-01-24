@@ -23,13 +23,12 @@ Wellcome to LaTeXtoXML file converter \includegraphics[width=50pt, heigth=50mm]{
 $$\frac{1}{2\pi}\int_{-\infty}^{\infty}e^{-\frac{x^2}{2}}dx$$
 \item kkkk 
 \item yes-pppp
-
 %antwort=(fraction=100, format="moodle_auto_format", feedback="bad answer even though is right") /%
 
 \end{itemize}
 --------------------------
 
-%frage= (type="multichoice", name="frage2", single=false, format="moodle_auto_format", answernumbering="123", correctfeedback="this is the correct feedback", partiallycorrectfeedback="this is the partially correct feedback", incorrectfeedback="this is the incorect feedback") 
+%frage= (type="numerical", name="frage2 test numerical", format="moodle_auto_format", defaultgrade=2.0, correctfeedback="this is the correct feedback", partiallycorrectfeedback="this is the partially correct feedback", incorrectfeedback="this is the incorect feedback", units="kg:20/m:50/bar:1", unitpenalty=0.55, showunits=1, unitsleft=0, unitgradingtype=1) 
 
 
 \subsection{xcf}
@@ -37,34 +36,38 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit
 sed do eiusmod tempor incididunt ut labore et dolore magnaaliqua Ut enim ad minim veniam,quis nostrud. 
 exercitation
 \begin{itemize}
-\item 00
-\item yes-22
-%antwort=(fraction=100) /%
-\item 11
+\item 2
+%antwort=(fraction=50 , tolerance=2) /%
+\item 10
+%antwort=(fraction=100, feedback="biennnn") /%
+
 \end{itemize}
 -------------------------
-%frage= (type="multichoice", name="frage3", format="moodle_auto_format", shuffle=true, single=true, generalfeedback="this is the general feedback", hidden=1, penalty=0.2, defaultgrade=1.0) /%
+%frage= (type="shortanswer", name="frage3 Short Answer", format="moodle_auto_format", usecase=1, defaultgrade=2.0) /%
 
 
 \subsection{xcf}	
-Frage text hier 
+Wähle eine Buchstabe aus {a,b,c,d,e,f,g}
 \begin{itemize} 	
-\item Antwort1 text hier
-\item Antwort2 text hier 
-%antwort=(fraction=100, feedback="t'es bete ou quoi??") /%
-\item Antwort3 text hier 
+\item a b c
+%antwort=(fraction=70, feedback="ok nicht schlecht") /%
+\item b
+%antwort=(fraction=50, feedback="passt auch") /%
+\item c
+%antwort=(fraction=100, feedback="gut gemacht") /%
+
 \end{itemize}      	
 ------------------------
-%frage= (type="multichoice", name="Test Frage", format="moodle_auto_format", shuffle=true, single=true, generalfeedback="this is the general feedback", hidden=1, penalty=0.2, defaultgrade=1.0) /%
+%frage= (type="truefalse", name="Test Frage true false", format="moodle_auto_format", generalfeedback="this is the general feedback", defaultgrade=1.0) /%
 
 
 \subsection{xcf}
-Frage text hier
+are you serious?
 \begin{itemize}
-\item Antwort1 text hier 
+\item false
+\item true
 %antwort=(fraction=100)  /%
-\item Antwort2 text hier
-\item Antwort3 text hier \includegraphics[heigth=5cm , width=3cm]{http://www.freepngimg.com/download/facebook/1-2-facebook-download-png.png} xxxxx \includegraphics[heigth=5cm , width=3cm]{https://orig00.deviantart.net/de98/f/2013/201/3/0/png__los_minions__by_annnto-d6ebcmp.png}
+
 \end{itemize}
 
 \end{document}
