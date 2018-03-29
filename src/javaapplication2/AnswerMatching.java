@@ -1,4 +1,4 @@
- /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -9,11 +9,12 @@ import javax.xml.bind.annotation.*;
 
 /**
  *
- * @author foufou 
+ * @author foufou
  */
-@XmlRootElement
-public class Text {
-    private String text = "$course$/";
+@XmlRootElement(name="answer")
+@XmlAccessorType(XmlAccessType.PROPERTY)
+class AnswerMatching {
+    private String text;
 
     /**
      * @return the text
@@ -27,7 +28,7 @@ public class Text {
      * @param text the text to set
      */
     public void setText(String text) {
-        this.text += text;
+        this.text = text;
     }
     
 }

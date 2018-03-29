@@ -1,4 +1,4 @@
- package javaapplication2;
+package javaapplication2;
 import java.io.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -14,14 +14,18 @@ import static java.util.Objects.isNull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.*;
+import javax.swing.JOptionPane;
+//import javax.jws.*;
 
 
-
+//@WebService(serviceName = "Converter")
 public class TestRead {
-        TestRead(String text) {
-            main(text);
+    TestRead(String text, String output) {
+            main(text, output);
         }
-    public static void main(String file) {
+    //@WebMethod
+    public static void main(String file, String output) {
+        String outputpath = output;
         Pattern patternQuestion;
         Pattern patternAnswer;
         Pattern patternAnswerText;
@@ -31,6 +35,7 @@ public class TestRead {
         Pattern patternIsTF;
         Pattern patternIsSA;
         Pattern patternIsNUM;
+        Pattern patternIsMAT;
         Pattern patternCategory;
         Matcher matcherQuestion;
         Matcher matcherAnswer;
@@ -41,6 +46,7 @@ public class TestRead {
         Matcher matcherIsTF;
         Matcher matcherIsSA;
         Matcher matcherIsNUM;
+        Matcher matcherIsMAT;
         Matcher matcherCategory;
         patternCategory = Pattern.compile("^%name=");
         patternQuestion = Pattern.compile("^%frage=");
@@ -52,15 +58,16 @@ public class TestRead {
         patternIsTF = Pattern.compile("\"truefalse\"");
         patternIsSA = Pattern.compile("\"shortanswer\"");
         patternIsNUM = Pattern.compile("\"numerical\"");
-
+        patternIsMAT = Pattern.compile("\"matching\"");
+        String category = "";
         try {
             FileInputStream fstream = new FileInputStream(file);
             DataInputStream in = new DataInputStream(fstream);
-            String category;
+            //String category;
             ArrayList<List<String>> questionParams;
             ArrayList<List<String>> question;
             ArrayList<List<String>> response;
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(in, "ISO-8859-15"))) {
                 String strLine;
                 category = "";
                 int answerWriter = 0;
@@ -69,6 +76,7 @@ public class TestRead {
                 boolean IsTFQuestion = false;
                 boolean IsSAQuestion = false;
                 boolean IsNUMQuestion = false;
+                boolean IsMATQuestion = false;
                 List<String> questionParamsArray = new ArrayList<>();
                 List<String> questionArray = new ArrayList<>();
                 List<String> answerArray = new ArrayList<>();
@@ -85,6 +93,7 @@ public class TestRead {
                     matcherIsTF = patternIsTF.matcher(strLine);
                     matcherIsSA = patternIsSA.matcher(strLine);
                     matcherIsNUM = patternIsNUM.matcher(strLine);
+                    matcherIsMAT = patternIsMAT.matcher(strLine);
                     matcherCategory = patternCategory.matcher(strLine);
                     
                     if (questionWriter == 1) {
@@ -122,9 +131,15 @@ public class TestRead {
                             questionParams.add(questionParamsArray);
                             questionParamsArray = new ArrayList<>();
                         }
+                        if (matcherIsMAT.find()) { //findet "matching"
+                            IsMATQuestion = true;
+                            questionParamsArray.add(strLine);
+                            questionParams.add(questionParamsArray);
+                            questionParamsArray = new ArrayList<>();
+                        }
                     }
                     
-                    if (IsMcQuestion || IsTFQuestion || IsSAQuestion || IsNUMQuestion) {
+                    if (IsMcQuestion || IsTFQuestion || IsSAQuestion || IsNUMQuestion || IsMATQuestion) {
                         if (matcherQuestionText.find()) { //findet \subsection{}
                             questionWriter = 1;
                         }
@@ -148,6 +163,7 @@ public class TestRead {
                             IsTFQuestion = false;
                             IsSAQuestion = false;
                             IsNUMQuestion = false;
+                            IsMATQuestion = false;
                             if (!answerArray.isEmpty()) {
                                 answerArray.remove(answerArray.size() - 1);
                                 response.add(answerArray);
@@ -166,40 +182,77 @@ public class TestRead {
                     myList.add(Arrays.toString(kk)); // add params array in one List of all questions params
                 });
             });
-            System.out.println("questParams final: " + myList);  // List of String myList.get(0) --> string contains first question params
-            System.out.println("questions final: " + question);  // List of List of String question.get(0) --> list of string contains first question text
-            System.out.println("responses final: " + response);  // List of List of String response.get(0) --> list of string contains first question answers
-            Quiz quiz = new Quiz();
-            quiz.setCategory(category);
-            System.out.println("\n----------Quiz Startet-------------\n");
-            for (int i = 0; i < myList.size(); i++) {
-                if (myList.get(i).contains("multichoice")){
-                    MultiChoiceQuestion MCQ = null;     
-                    MCQ = MultichoiceFetcher(myList.get(i),question.get(i),response.get(i));
-                    quiz.setQuestions(MCQ);
-                } else if (myList.get(i).contains("truefalse")){
-                    TrueFalseQuestion TFQ = null;     
-                    TFQ = TrueFalseFetcher(myList.get(i),question.get(i),response.get(i));
-                    quiz.setQuestions(TFQ);
-                } else if (myList.get(i).contains("shortanswer")){
-                    ShortAnswerQuestion SAQ = null;     
-                    SAQ = ShortAnswerFetcher(myList.get(i),question.get(i),response.get(i));
-                    quiz.setQuestions(SAQ);
-                } else if (myList.get(i).contains("numerical")){
-                    NumericalQuestion NUMQ = null;     
-                    NUMQ = NumericalFetcher(myList.get(i),question.get(i),response.get(i));
-                    quiz.setQuestions(NUMQ);
-                }
-                
-            }
-            OutputToXml(quiz);
+            System.out.println("questParams final: " + myList);
+            //OutprintObject(myList);
+// List of String myList.get(0) --> string contains first question params
+            System.out.println("questions final: " + question);
+            //OutprintObject(question);
+// List of List of String question.get(0) --> list of string contains first question text
+            System.out.println("responses final: " + response);
+            //OutprintObject(response);
+// List of List of String response.get(0) --> list of string contains first question answers
+            generalFetcher(outputpath, category, myList, question, response);
+            
         }
         catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
         }
-        
+      //return category;  
     }
-   
+    
+    public static void generalFetcher (String output, String category, List<String> myList, ArrayList<List<String>> question, ArrayList<List<String>> response){
+            Quiz quiz = new Quiz();
+            
+            quiz.setCategory(category);
+            System.out.println("\n----------Quiz Startet-------------\n");
+            for (int i = 0; i < myList.size(); i++) {
+                if (myList.get(i).contains("multichoice")){
+                    try {
+                        MultiChoiceQuestion MCQ = null;
+                        MCQ = MultichoiceFetcher(myList.get(i),question.get(i),response.get(i));
+                        quiz.setQuestions(MCQ);
+                    } catch (IOException ex) {
+                        Logger.getLogger(TestRead.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else if (myList.get(i).contains("truefalse")){
+                    try {
+                        TrueFalseQuestion TFQ = null;
+                        TFQ = TrueFalseFetcher(myList.get(i),question.get(i),response.get(i));
+                        quiz.setQuestions(TFQ);
+                    } catch (IOException ex) {
+                        Logger.getLogger(TestRead.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else if (myList.get(i).contains("shortanswer")){
+                    try {
+                        ShortAnswerQuestion SAQ = null;
+                        SAQ = ShortAnswerFetcher(myList.get(i),question.get(i),response.get(i));
+                        quiz.setQuestions(SAQ);
+                    } catch (IOException ex) {
+                        Logger.getLogger(TestRead.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else if (myList.get(i).contains("numerical")){
+                    try {
+                        NumericalQuestion NUMQ = null;
+                        NUMQ = NumericalFetcher(myList.get(i),question.get(i),response.get(i));
+                        quiz.setQuestions(NUMQ);
+                    } catch (IOException ex) {
+                        Logger.getLogger(TestRead.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else if (myList.get(i).contains("matching")){
+                    try {
+                        MatchingQuestion MATQ = null;
+                        MATQ = MatchingFetcher(myList.get(i),question.get(i),response.get(i));
+                        quiz.setQuestions(MATQ);
+                    } catch (IOException ex) {
+                        Logger.getLogger(TestRead.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
+            OutputToXml(quiz, output);
+            //quiz.finalize();
+    }
+    
     public static MultiChoiceQuestion MultichoiceFetcher (String paramsList,  List<String> questionsList, List<String> answersList) throws IOException{
             Pattern pi;
             pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})"); //  detect {path}
@@ -676,23 +729,9 @@ public class TestRead {
             
             for (String answer : parsedString) {
                 if (!answer.isEmpty() && !isNull(answer)) {
-                    //<br>%antwort=(fraction=100, feedback="t'es bete ou quoi??") /%<br>
                     String newstr = answer.replaceAll("(<br>%antwort)[^&]*(\\%<br>)", "");
                     AnswerNumerical answerObj = new AnswerNumerical();
-                    //Matcher mia = pi.matcher(newstr);
-                    //newstr = answer.replaceAll("<br>","");
-                    
                     answerObj.setText(newstr.trim());
-//                    if (mia.find()) {
-//                        List<String[]> imgs = imageAdapter(newstr);
-//                        imgs.forEach((img) -> {
-//                            Image image = new Image();
-//                            image.setName(img[0]);
-//                            image.setEncodedstring(img[1]);
-//                            answerObj.setText(img[2]);
-//                            answerObj.setImages(image);
-//                        });
-//                    }
                     Matcher m1 = p.matcher(answer);
                     while (m1.find()) {
                         String[] answerParams = new String[1];
@@ -726,7 +765,109 @@ public class TestRead {
             return NUMQ;
     }
     
-    
+    public static MatchingQuestion MatchingFetcher (String paramsList,  List<String> questionsList, List<String> answersList) throws IOException{
+            Pattern pi;
+            pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})"); //  detect {path}
+            Pattern patternParamType = Pattern.compile("type=\"matching\"");
+            MatchingQuestion MATQ = null; 
+            Matcher matcherParamType = patternParamType.matcher(paramsList);
+            String[] split = paramsList.split(", ");
+            String QuestionTextJoined = String.join("<br>", questionsList);
+            String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
+            Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
+            String AswerTextJoined = String.join("<br>", answersList);
+            String[] parsedString = AswerTextJoined.split("\\\\item");
+            Pattern p = Pattern.compile("%antwort=(.*?)/%");
+            if (matcherParamType.find()) {
+                MATQ = new MatchingQuestion();
+                MATQ.setQuestiontext(QuestionTextJoinedProcessed);
+                if(mi.find()) {
+                    List<String[]> imgs = imageAdapter(QuestionTextJoinedProcessed);
+
+
+                    for (String[] img : imgs) {
+                        Image image = new Image();
+                        image.setName(img[0]);
+                        image.setEncodedstring(img[1]);
+                        MATQ.setQuestiontext(img[2]);
+                        MATQ.setImages(image);
+                    }
+                }
+                
+            }
+            
+            for (String split1 : split) {
+                String[] parameter = paramSplitter(split1);
+                if (MATQ != null) {
+                    if ("name".equals(parameter[0])) {
+                        MATQ.setName(parameter[1]);
+                    }
+                    if ("shuffle".equals(parameter[0])) {
+                        MATQ.setShuffleanswers(Boolean.parseBoolean(parameter[1].trim()));
+                    }
+                    if ("format".equals(parameter[0])) {
+                        MATQ.setFormat(parameter[1]);
+                    }
+                    if ("correctfeedback".equals(parameter[0])) {
+                        MATQ.setCorrectfeedback(parameter[1]);
+                    }
+                    if ("partiallycorrectfeedback".equals(parameter[0])) {
+                        MATQ.setPartiallycorrectfeedback(parameter[1]);
+                    }
+                    if ("incorrectfeedback".equals(parameter[0])) {
+                        MATQ.setIncorrectfeedback(parameter[1]);
+                    }
+                    if ("generalfeedback".equals(parameter[0])) {
+                        MATQ.setGeneralfeedback(parameter[1]);
+                    }
+                    if ("hidden".equals(parameter[0])) {
+                        MATQ.setHidden(Integer.parseInt(parameter[1].trim()));
+                    }
+                    if ("defaultgrade".equals(parameter[0])) {
+                        MATQ.setDefaultgrade(Float.parseFloat(parameter[1].trim()));
+                    }
+                    if ("penalty".equals(parameter[0])) {
+                        MATQ.setPenalty(Float.parseFloat(parameter[1].trim()));
+                    }
+                   
+
+                }
+            }
+
+            for (String answer : parsedString) {
+
+                if (!answer.isEmpty() && !isNull(answer) && !("<br>".equals(answer))) {
+                    String newstr = answer.replaceAll("(<br>%antwort)[^&]*(\\%<br>)", "");
+                    Subquestion subq = new Subquestion();
+                    AnswerMatching ans = new AnswerMatching();
+                    ans.setText(newstr.trim().replaceAll("<br>", ""));
+                    subq.setAnswer(ans);
+                    Matcher m1 = p.matcher(answer);
+                    while (m1.find()) {
+                        String[] answerParams = new String[1];
+                        answerParams[0] = m1.group(1);
+                        if (answerParams[0].contains(",")) {
+                            answerParams = m1.group(1).split(", ");
+                            System.out.println(Arrays.toString(answerParams));
+                        }
+                        for (String ap : answerParams) {
+                            String[] parameterAnswer = paramSplitter(ap);
+                            if ("text".equals(parameterAnswer[0])) {
+                                subq.setText(parameterAnswer[1]);
+                            }
+                        }
+                    }
+                    if (MATQ != null) {
+                        String format = MATQ.getFormat();
+                        subq.setFormat(format);
+                        MATQ.setSubquestions(subq);
+                    }
+                }
+            }
+
+            System.out.printf("\n--Begin question--\n");
+            return MATQ;
+    }
     
     public static String[] paramSplitter(String str){
         String paramstring;
@@ -735,6 +876,7 @@ public class TestRead {
         String[] params = replace.split("=");
         return params;
     }
+    
     public static void OutprintObject(Object obj) {
         for (Field field : obj.getClass().getDeclaredFields()) {
             field.setAccessible(true);
@@ -748,26 +890,31 @@ public class TestRead {
             System.out.printf("%s: %s%n", name, value);
         }
     }
+    
     public static String StringProcessed (String str){
         String st = "<text>"+str+"</text>";
         return st;
     }
 
-    private static void OutputToXml(Quiz quiz) {
+    public static void OutputToXml(Quiz quiz, String output) {
         try {
-            File file = new File("C:\\Users\\foufou\\Desktop\\file.xml");
+            //File file = new File("C:\\Users\\foufou\\Desktop\\file.xml");
+            String out = output;
+            File file = new File(out);
             JAXBContext jaxbContext = JAXBContext.newInstance(Quiz.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, "ISO-8859-15"); //"UTF-8"
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(quiz, file);
+            JOptionPane.showMessageDialog(null, "Conversion done!   Please check your file on this path:\n"+file);
+            
         } catch (JAXBException e) {
-            System.err.println("Error in marshalling..."+e.toString());
+            //System.err.println("Error in marshalling..."+e.toString());
+            JOptionPane.showMessageDialog(null, "Error in marshalling..."+e.toString());
         }  
     }
-
     
-    private static List<String[]> imageAdapter(String str) throws IOException{
+    public static List<String[]> imageAdapter(String str) throws IOException{
         List<String[]> list = new ArrayList<>();
         Pattern pi;
         pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})");
@@ -780,7 +927,7 @@ public class TestRead {
         File f = new File(tmp1);
         imageAr[0] = f.getAbsolutePath().substring(f.getAbsolutePath().lastIndexOf("\\")+1);
         imageAr[1] = base46Image;
-        str = str.replaceFirst("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})", "<p style=\"display:inline;\"><img src=\"@@PLUGINFILE@@/"+imageAr[0]+"\" role=\"presentation\" style=\"vertical-align:middle; margin:0.5em;\" "+ImageParams+"/></p>"); 
+        str = str.replaceFirst("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})", "<p style=\"display:inline;\"><img src=\"@@PLUGINFILE@@/"+imageAr[0]+"\" role=\"presentation\" style=\"vertical-align:middle; margin:0.5em; "+ImageParams+"\" /></p>"); 
         imageAr[2] = str;
         list.add(imageAr);
         }
@@ -838,17 +985,22 @@ public class TestRead {
                 String[] parameterImage = paramSplitter(ip);
                 for (String tmp : parameterImage) {
                     if (tmp.contains("heigth")) {
-                        FinalString += " heigth=" + convertImageParams(parameterImage[1]);
+                        FinalString += " heigth:" + convertImageParams(parameterImage[1]);
                     }
                     if (tmp.contains("width")) {
-                        FinalString += " width=" + convertImageParams(parameterImage[1]);
+                        FinalString += " width:" + convertImageParams(parameterImage[1]);
                     }
                 }
             }
         }else{
             tab[0] = htmlParamString;
             String[] parameterImage = paramSplitter(tab[0]);
-            FinalString += parameterImage[0].trim() + "=" + convertImageParams(parameterImage[1]);
+                    if (parameterImage[0].contains("scale")) {
+                        FinalString += "transform:scale("+Float.parseFloat(parameterImage[1])+"); ";
+                    } else if (!parameterImage[0].contains("scale")) {
+                        FinalString += parameterImage[0].trim() + ":" + convertImageParams(parameterImage[1]);
+                    }
+            
         }
         return FinalString;
     }
@@ -878,7 +1030,7 @@ public class TestRead {
                     break;
             }
             int finalint = (int) Math.round(f);
-            Result += "\""+Integer.toString(finalint)+"\"";
+            Result += Integer.toString(finalint)+"px; ";
         }
         return Result;
     }

@@ -53,7 +53,8 @@ public class Quiz {
     @XmlElement(name="question", type=TrueFalseQuestion.class),
     @XmlElement(name="question", type=ShortAnswerQuestion.class),
     @XmlElement(name="question", type=MultiChoiceQuestion.class),
-    @XmlElement(name="question", type=NumericalQuestion.class)
+    @XmlElement(name="question", type=NumericalQuestion.class),
+    @XmlElement(name="question", type=MatchingQuestion.class)
     })
     /**
      * @return the questions

@@ -18,6 +18,13 @@ import java.util.ArrayList;
 
 public class Question {
 
+    /**
+     * @param subquestions the subquestions to set
+     */
+    public void setSubquestions(ArrayList<Subquestion> subquestions) {
+        this.subquestions = subquestions;
+    }
+
     private boolean single = true;
     private boolean shuffleanswers = true;
     private int hidden = 0;
@@ -32,9 +39,7 @@ public class Question {
     private int showunits;
     private int unitsleft;
     ArrayList<Unit> units;
- 
-    //private ArrayList<Image> images;
-    
+    ArrayList<Subquestion> subquestions;
     private final QuestionName name = new QuestionName();
     private final QuestionText questiontext = new QuestionText();
     private final Feedback correctfeedback = new Feedback();
@@ -51,6 +56,7 @@ public class Question {
         this.answers = new ArrayList<>();
         this.answersnum = new ArrayList<>();
         this.units = new ArrayList<>();
+        this.subquestions = new ArrayList<>();
     }
     @Override
     public String toString() {
@@ -94,6 +100,7 @@ public class Question {
         this.partiallycorrectfeedback.setFormat(format) ;
         this.incorrectfeedback.setFormat(format);
         this.generalfeedback.setFormat(format);
+        //this.subquestions.forEach(setFormat(format););
     }
 
     /**
@@ -390,5 +397,16 @@ public class Question {
     
     public ArrayList<AnswerNumerical> getAnswersnum() {
         return answersnum;
+    }
+
+    /**
+     * @return the subquestions
+     */
+    public ArrayList<Subquestion> getSubquestions() {
+        return subquestions;
+    }
+    public void setSubquestions(Subquestion subq) {
+        Subquestion subquestion = subq;
+        this.subquestions.add(subquestion);
     }
 }
