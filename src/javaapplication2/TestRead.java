@@ -48,9 +48,12 @@ public class TestRead {
         Matcher matcherIsNUM;
         Matcher matcherIsMAT;
         Matcher matcherCategory;
-        patternCategory = Pattern.compile("^%name=");
-        patternQuestion = Pattern.compile("^%frage=");
-        patternAnswer = Pattern.compile("^%antwort=");
+        //patternCategory = Pattern.compile("^%name="); //"[^\\w]name\\|"
+        patternCategory = Pattern.compile("\\\\name\\|(.*)\\|");
+        //patternQuestion = Pattern.compile("^%frage="); //"[^\\w]question\\|"
+        patternQuestion = Pattern.compile("\\\\question\\|(.*)\\|");
+        //patternAnswer = Pattern.compile("^%antwort="); //"[^\\w]answer\\|"
+        patternAnswer = Pattern.compile("\\\\answer\\|(.*)\\|");
         patternQuestionText = Pattern.compile("[^\\w]subsection");
         patternAnswerText = Pattern.compile("[^\\w]begin\\{itemize\\}");
         patternAnswerTextEnd = Pattern.compile("[^\\w]end\\{itemize\\}");
@@ -103,10 +106,11 @@ public class TestRead {
                         answerArray.add(strLine);
                     }
                     if(matcherCategory.find()){
-                        category = strLine.replace("%name=", "");
-                        category = category.replace("/%","");
+                        category = matcherCategory.group(1);
+                        //category = strLine.replace("\name", ""); //"[^\\w]name\\|" statt %name=XXXXXXX/%
+                        //category = category.replaceAll("|",""); // | statt /%
                     }
-                    if(matcherQuestion.find()) { // findet %frage: ....
+                    if(matcherQuestion.find()) { // findet frage: ....
                         if (matcherIsMc.find()) { //findet "multichoice"
                             IsMcQuestion = true;
                             questionParamsArray.add(strLine);
@@ -175,9 +179,9 @@ public class TestRead {
                 }
             }
             List<String> myList = new ArrayList<>();
-            Pattern patternxy = Pattern.compile("\\(([^)]+)\\)"); //read params between () in %frage=(...)/% Line
+            //Pattern patternxy = Pattern.compile("\\(([^)]+)\\)"); //read params between () in %frage=(...)/% Line  --- muss replace () with ||
             questionParams.forEach((List<String> el) -> {
-                el.stream().map((e) -> patternxy.matcher(e)).filter((matcherxy) -> (matcherxy.find())).map((matcherxy) -> matcherxy.group(1)).map((tmp) -> tmp.split(", ")).forEachOrdered((kk) -> {
+                el.stream().map((e) -> patternQuestion.matcher(e)).filter((matcherxy) -> (matcherxy.find())).map((matcherxy) -> matcherxy.group(1)).map((tmp) -> tmp.split(", ")).forEachOrdered((kk) -> {
                     // split question params with ","
                     myList.add(Arrays.toString(kk)); // add params array in one List of all questions params
                 });
@@ -263,9 +267,10 @@ public class TestRead {
             String QuestionTextJoined = String.join("<br>", questionsList);
             String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
-            String AswerTextJoined = String.join("<br>", answersList);
+            String AswerTextJoined = String.join(" ", answersList);
             String[] parsedString = AswerTextJoined.split("\\\\item");
-            Pattern p = Pattern.compile("%antwort=(.*?)/%");
+            //Pattern p = Pattern.compile("%antwort=(.*?)/%"); //"[^\\w]answer\\|.*?\\|"
+            Pattern p = Pattern.compile("\\\\answer\\|(.*)\\|");
             if (matcherParamType.find()) {
                 MCQ = new MultiChoiceQuestion();
                 //MCQ.setType("multichoice");
@@ -332,7 +337,7 @@ public class TestRead {
             
             for (String answer : parsedString) {
                 if (!answer.isEmpty() && !isNull(answer)) {
-                    String newstr = answer.replaceAll("(<br>%antwort)[^&]*(\\%<br>)", "");
+                    String newstr = answer.replaceAll("\\\\answer\\|(.*)\\|", ""); ////"[^\\w]answer\\|.*?\\|"
                     Answer answerObj = new Answer();
                     Matcher mia = pi.matcher(newstr); 
                     answerObj.setText("<p>" + newstr + "<br></p>\n");
@@ -388,7 +393,7 @@ public class TestRead {
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
             String AswerTextJoined = String.join(" ", answersList);
             String[] parsedString = AswerTextJoined.split("\\\\item");
-            Pattern p = Pattern.compile("%antwort=(.*?)/%");
+            Pattern p = Pattern.compile("\\\\answer\\|(.*)\\|");
             if (matcherParamType.find()) {
                 TFQ = new TrueFalseQuestion();
                 TFQ.setQuestiontext(QuestionTextJoinedProcessed);
@@ -455,7 +460,7 @@ public class TestRead {
             for (String answer : parsedString) {
                 if (!answer.isEmpty() && !isNull(answer)) {
                     //System.out.println("answer befor:"+answer);
-                    String newstr = answer.replaceAll("(%antwort)[^&]*(\\%)", "");
+                    String newstr = answer.replaceAll("\\\\answer\\|(.*)\\|", "");
                     //System.out.println("answer after:"+answer);
                     Answer answerObj = new Answer();
                     //Matcher mia = pi.matcher(newstr);
@@ -511,9 +516,9 @@ public class TestRead {
             String QuestionTextJoined = String.join("<br>", questionsList);
             String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
-            String AswerTextJoined = String.join("<br>", answersList);
+            String AswerTextJoined = String.join(" ", answersList);
             String[] parsedString = AswerTextJoined.split("\\\\item");
-            Pattern p = Pattern.compile("%antwort=(.*?)/%");
+            Pattern p = Pattern.compile("\\\\answer\\|(.*)\\|");
             if (matcherParamType.find()) {
                 SAQ = new ShortAnswerQuestion();
                 //MCQ.setType("multichoice");
@@ -584,7 +589,7 @@ public class TestRead {
             for (String answer : parsedString) {
                 if (!answer.isEmpty() && !isNull(answer)) {
                     //<br>%antwort=(fraction=100, feedback="t'es bete ou quoi??") /%<br>
-                    String newstr = answer.replaceAll("(<br>%antwort)[^&]*(\\%<br>)", "");
+                    String newstr = answer.replaceAll("\\\\answer\\|(.*)\\|", "");
                     Answer answerObj = new Answer();
                     //Matcher mia = pi.matcher(newstr);
                     //newstr = answer.replaceAll("<br>","");
@@ -640,9 +645,9 @@ public class TestRead {
             String QuestionTextJoined = String.join("<br>", questionsList);
             String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
-            String AswerTextJoined = String.join("<br>", answersList);
+            String AswerTextJoined = String.join(" ", answersList);
             String[] parsedString = AswerTextJoined.split("\\\\item");
-            Pattern p = Pattern.compile("%antwort=(.*?)/%");
+            Pattern p = Pattern.compile("\\\\answer\\|(.*)\\|");
             if (matcherParamType.find()) {
                 NUMQ = new NumericalQuestion();
                 //MCQ.setType("multichoice");
@@ -729,7 +734,7 @@ public class TestRead {
             
             for (String answer : parsedString) {
                 if (!answer.isEmpty() && !isNull(answer)) {
-                    String newstr = answer.replaceAll("(<br>%antwort)[^&]*(\\%<br>)", "");
+                    String newstr = answer.replaceAll("\\\\answer\\|(.*)\\|", "");
                     AnswerNumerical answerObj = new AnswerNumerical();
                     answerObj.setText(newstr.trim());
                     Matcher m1 = p.matcher(answer);
@@ -775,9 +780,9 @@ public class TestRead {
             String QuestionTextJoined = String.join("<br>", questionsList);
             String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
-            String AswerTextJoined = String.join("<br>", answersList);
+            String AswerTextJoined = String.join(" ", answersList);
             String[] parsedString = AswerTextJoined.split("\\\\item");
-            Pattern p = Pattern.compile("%antwort=(.*?)/%");
+            Pattern p = Pattern.compile("\\\\answer\\|(.*)\\|");
             if (matcherParamType.find()) {
                 MATQ = new MatchingQuestion();
                 MATQ.setQuestiontext(QuestionTextJoinedProcessed);
@@ -837,7 +842,8 @@ public class TestRead {
             for (String answer : parsedString) {
 
                 if (!answer.isEmpty() && !isNull(answer) && !("<br>".equals(answer))) {
-                    String newstr = answer.replaceAll("(<br>%antwort)[^&]*(\\%<br>)", "");
+                    //String newstr = answer.replaceAll("(<br>%antwort)[^&]*(\\%<br>)", "");
+                    String newstr = answer.replaceAll("\\\\answer\\|(.*)\\|", "");
                     Subquestion subq = new Subquestion();
                     AnswerMatching ans = new AnswerMatching();
                     ans.setText(newstr.trim().replaceAll("<br>", ""));
