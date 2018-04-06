@@ -70,7 +70,7 @@ public class TestRead {
             ArrayList<List<String>> questionParams;
             ArrayList<List<String>> question;
             ArrayList<List<String>> response;
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(in, "ISO-8859-15"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"))) {  //ISO-8859-15
                 String strLine;
                 category = "";
                 int answerWriter = 0;
@@ -146,6 +146,7 @@ public class TestRead {
                     if (IsMcQuestion || IsTFQuestion || IsSAQuestion || IsNUMQuestion || IsMATQuestion) {
                         if (matcherQuestionText.find()) { //findet \subsection{}
                             questionWriter = 1;
+                            questionArray.add(strLine); //working here
                         }
                         if (matcherAnswerText.find()) { //findet \begin{itemize}
                             questionWriter = 0;
@@ -264,16 +265,17 @@ public class TestRead {
             MultiChoiceQuestion MCQ = null; 
             Matcher matcherParamType = patternParamType.matcher(paramsList);
             String[] split = paramsList.split(", ");
-            String QuestionTextJoined = String.join("<br>", questionsList);
+            String first = questionsList.get(0).replaceAll("\\\\subsection\\{", "").replaceAll("\\}", "");
+            List sublist = questionsList.subList(1, questionsList.size());
+            String QuestionTextJoined = String.join("<br>", sublist);
             String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
             String AswerTextJoined = String.join(" ", answersList);
             String[] parsedString = AswerTextJoined.split("\\\\item");
-            //Pattern p = Pattern.compile("%antwort=(.*?)/%"); //"[^\\w]answer\\|.*?\\|"
             Pattern p = Pattern.compile("\\\\answer\\|(.*)\\|");
             if (matcherParamType.find()) {
                 MCQ = new MultiChoiceQuestion();
-                //MCQ.setType("multichoice");
+                MCQ.setName(first);
                 MCQ.setQuestiontext(QuestionTextJoinedProcessed);
                 if(mi.find()) {
                     List<String[]> imgs = imageAdapter(QuestionTextJoinedProcessed);
@@ -289,13 +291,13 @@ public class TestRead {
                 }
                 
             }
-            
+                            
             for (String split1 : split) {
                 String[] parameter = paramSplitter(split1);
                 if (MCQ != null) {
-                    if ("name".equals(parameter[0])) {
-                        MCQ.setName(parameter[1]);
-                    }
+//                    if ("name".equals(parameter[0])) {
+//                        MCQ.setName(parameter[1]);
+//                    }
                     if ("single".equals(parameter[0])) {
                         boolean bool = Boolean.parseBoolean(parameter[1].trim());
                         MCQ.setSingle(bool);
@@ -388,7 +390,10 @@ public class TestRead {
             TrueFalseQuestion TFQ = null; 
             Matcher matcherParamType = patternParamType.matcher(paramsList);
             String[] split = paramsList.split(", ");
-            String QuestionTextJoined = String.join("<br>", questionsList);
+            String first = questionsList.get(0).replaceAll("\\\\subsection\\{", "").replaceAll("\\}", "");
+            List sublist = questionsList.subList(1, questionsList.size());
+            String QuestionTextJoined = String.join("<br>", sublist);
+            //String QuestionTextJoined = String.join("<br>", questionsList);
             String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
             String AswerTextJoined = String.join(" ", answersList);
@@ -397,6 +402,7 @@ public class TestRead {
             if (matcherParamType.find()) {
                 TFQ = new TrueFalseQuestion();
                 TFQ.setQuestiontext(QuestionTextJoinedProcessed);
+                TFQ.setName(first);
                 if(mi.find()) {
                     List<String[]> imgs = imageAdapter(QuestionTextJoinedProcessed);
 
@@ -415,9 +421,9 @@ public class TestRead {
             for (String split1 : split) {
                 String[] parameter = paramSplitter(split1);
                 if (TFQ != null) {
-                    if ("name".equals(parameter[0])) {
-                        TFQ.setName(parameter[1]);
-                    }
+//                    if ("name".equals(parameter[0])) {
+//                        TFQ.setName(parameter[1]);
+//                    }
 //                    if ("single".equals(parameter[0])) {
 //                        boolean bool = Boolean.parseBoolean(parameter[1].trim());
 //                        TFQ.setSingle(bool);
@@ -513,7 +519,10 @@ public class TestRead {
             ShortAnswerQuestion SAQ = null; 
             Matcher matcherParamType = patternParamType.matcher(paramsList);
             String[] split = paramsList.split(", ");
-            String QuestionTextJoined = String.join("<br>", questionsList);
+            String first = questionsList.get(0).replaceAll("\\\\subsection\\{", "").replaceAll("\\}", "");
+            List sublist = questionsList.subList(1, questionsList.size());
+            String QuestionTextJoined = String.join("<br>", sublist);
+            //String QuestionTextJoined = String.join("<br>", questionsList);
             String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
             String AswerTextJoined = String.join(" ", answersList);
@@ -521,7 +530,7 @@ public class TestRead {
             Pattern p = Pattern.compile("\\\\answer\\|(.*)\\|");
             if (matcherParamType.find()) {
                 SAQ = new ShortAnswerQuestion();
-                //MCQ.setType("multichoice");
+                SAQ.setName(first);
                 SAQ.setQuestiontext(QuestionTextJoinedProcessed);
                 if(mi.find()) {
                     List<String[]> imgs = imageAdapter(QuestionTextJoinedProcessed);
@@ -541,9 +550,9 @@ public class TestRead {
             for (String split1 : split) {
                 String[] parameter = paramSplitter(split1);
                 if (SAQ != null) {
-                    if ("name".equals(parameter[0])) {
-                        SAQ.setName(parameter[1]);
-                    }
+//                    if ("name".equals(parameter[0])) {
+//                        SAQ.setName(parameter[1]);
+//                    }
                     if ("usecase".equals(parameter[0])) {
                         SAQ.setUsecase(Integer.parseInt(parameter[1].trim()));
                     }
@@ -642,7 +651,10 @@ public class TestRead {
             NumericalQuestion NUMQ = null; 
             Matcher matcherParamType = patternParamType.matcher(paramsList);
             String[] split = paramsList.split(", ");
-            String QuestionTextJoined = String.join("<br>", questionsList);
+            String first = questionsList.get(0).replaceAll("\\\\subsection\\{", "").replaceAll("\\}", "");
+            List sublist = questionsList.subList(1, questionsList.size());
+            String QuestionTextJoined = String.join("<br>", sublist);
+            //String QuestionTextJoined = String.join("<br>", questionsList);
             String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
             String AswerTextJoined = String.join(" ", answersList);
@@ -650,7 +662,7 @@ public class TestRead {
             Pattern p = Pattern.compile("\\\\answer\\|(.*)\\|");
             if (matcherParamType.find()) {
                 NUMQ = new NumericalQuestion();
-                //MCQ.setType("multichoice");
+                NUMQ.setName(first);
                 NUMQ.setQuestiontext(QuestionTextJoinedProcessed);
                 if(mi.find()) {
                     List<String[]> imgs = imageAdapter(QuestionTextJoinedProcessed);
@@ -670,9 +682,9 @@ public class TestRead {
             for (String split1 : split) {
                 String[] parameter = paramSplitter(split1);
                 if (NUMQ != null) {
-                    if ("name".equals(parameter[0])) {
-                        NUMQ.setName(parameter[1]);
-                    }
+//                    if ("name".equals(parameter[0])) {
+//                        NUMQ.setName(parameter[1]);
+//                    }
                     if ("units".equals(parameter[0])) {
                         String[] strunit = new String[1];
                         if(parameter[1].contains("/")){
@@ -777,7 +789,10 @@ public class TestRead {
             MatchingQuestion MATQ = null; 
             Matcher matcherParamType = patternParamType.matcher(paramsList);
             String[] split = paramsList.split(", ");
-            String QuestionTextJoined = String.join("<br>", questionsList);
+            String first = questionsList.get(0).replaceAll("\\\\subsection\\{", "").replaceAll("\\}", "");
+            List sublist = questionsList.subList(1, questionsList.size());
+            String QuestionTextJoined = String.join("<br>", sublist);
+            //String QuestionTextJoined = String.join("<br>", questionsList);
             String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
             String AswerTextJoined = String.join(" ", answersList);
@@ -786,6 +801,7 @@ public class TestRead {
             if (matcherParamType.find()) {
                 MATQ = new MatchingQuestion();
                 MATQ.setQuestiontext(QuestionTextJoinedProcessed);
+                MATQ.setName(first);
                 if(mi.find()) {
                     List<String[]> imgs = imageAdapter(QuestionTextJoinedProcessed);
 
@@ -804,9 +820,9 @@ public class TestRead {
             for (String split1 : split) {
                 String[] parameter = paramSplitter(split1);
                 if (MATQ != null) {
-                    if ("name".equals(parameter[0])) {
-                        MATQ.setName(parameter[1]);
-                    }
+//                    if ("name".equals(parameter[0])) {
+//                        MATQ.setName(parameter[1]);
+//                    }
                     if ("shuffle".equals(parameter[0])) {
                         MATQ.setShuffleanswers(Boolean.parseBoolean(parameter[1].trim()));
                     }
