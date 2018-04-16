@@ -4,9 +4,6 @@
  * and open the template in the editor. 
  */
 package javaapplication2;
-
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.*;
 
 
@@ -14,20 +11,20 @@ import javax.xml.bind.annotation.*;
  *
  * @author foufou
  */
-@XmlRootElement
+@XmlRootElement(name="quiz")
 
 @XmlAccessorType(XmlAccessType.PROPERTY)
-public class Quiz {
+public class CR_Quiz {
   
     private final Category category = new Category();
-    ArrayList<Question> questions;
+    CR_Question question;
 
     public static void main(String[] args){
     
     }
 
-    public  Quiz() {
-        this.questions = new ArrayList<>();
+    public  CR_Quiz() {
+        this.question = new CR_Question();
     }
     /**
      * @return the category
@@ -35,7 +32,6 @@ public class Quiz {
    
     @XmlElement(name="question")
     public Category getCategory() {
-        
         return category;
     }
     //
@@ -50,26 +46,22 @@ public class Quiz {
 
     
     @XmlElements({
-    @XmlElement(name="question", type=TrueFalseQuestion.class),
-    @XmlElement(name="question", type=ShortAnswerQuestion.class),
-    @XmlElement(name="question", type=MultiChoiceQuestion.class),
-    @XmlElement(name="question", type=NumericalQuestion.class),
-    @XmlElement(name="question", type=MatchingQuestion.class)
+        @XmlElement(name="question", type=CR_Question.class)
     })
     /**
      * @return the questions
      */
     //@XmlElement(name="question")
-    public List<Question> getQuestions() {
-        return questions;
+    public CR_Question getQuestion() {
+        return question;
     }
 
     /**
      * @param question the questions to set
      */
-    public void setQuestions(Question question) {
-        Question q = question;
-        this.questions.add(q);
+    public void setQuestion(CR_Question question) {
+        CR_Question q = question;
+        this.question = q;
     }
 
 }

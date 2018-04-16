@@ -7,7 +7,7 @@
 \begin{document}
 \maketitle{Quiz-Mathematik}
 
-%name= Quiz Khalifa /%
+%name= Test Quiz /%
 
 
 %frage= (type="multichoice", name="Section Tittel", format="moodle_auto_format", shuffle=true, single=false, answernumbering=ABCD, hidden=0, penalty=0.5, defaultgrade=2.0) 

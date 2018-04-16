@@ -5,18 +5,11 @@
  */
 package javaapplication2;
 
-import java.awt.BorderLayout;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -32,9 +25,11 @@ public class MainForm extends javax.swing.JFrame {
      */
     public MainForm() {
         initComponents();
-        //jTextField1.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\JavaApplication2\\latex-v.txt");
-        jTextField2.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\WebApplication1\\test\\sum.java");
-        jTextField3.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\WebApplication1\\test\\sumTest.java");
+//        LatexFilePath.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\JavaApplication2\\quizW4[2075].tex.txt");
+//        ClassFilePath.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\WebApplication1\\test\\sum.java");
+//        TestClassFilePath.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\WebApplication1\\test\\sumTest.java");
+//        LatexOutputFilePath.setText("D:\\LatexQuiz.xml");
+//        ClassOutputFilePath.setText("D:\\CodeRunnerQuiz.xml");
     }
 
     /**
@@ -46,104 +41,119 @@ public class MainForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        LatexFC = new javax.swing.JButton();
+        LatexFilePath = new javax.swing.JTextField();
+        ConvertLatex = new javax.swing.JButton();
+        CancelConvertLatex = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jButton8 = new javax.swing.JButton();
+        VirtualConsolArea = new javax.swing.JTextArea();
+        ConvertCR = new javax.swing.JButton();
+        CancelConvertCR = new javax.swing.JButton();
+        ClassFilePath = new javax.swing.JTextField();
+        ClassFC = new javax.swing.JButton();
+        TestClassFC = new javax.swing.JButton();
+        TestClassFilePath = new javax.swing.JTextField();
+        LatexOutputFilePath = new javax.swing.JTextField();
+        LatexOutputFC = new javax.swing.JButton();
+        CROutputFC = new javax.swing.JButton();
+        ClassOutputFilePath = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Latex File");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        LatexFC.setText("Latex File");
+        LatexFC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                LatexFCActionPerformed(evt);
             }
         });
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        LatexFilePath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                LatexFilePathActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Convert");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        ConvertLatex.setText("Convert");
+        ConvertLatex.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                ConvertLatexActionPerformed(evt);
             }
         });
 
-        jButton3.setText("cancel");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        CancelConvertLatex.setText("cancel");
+        CancelConvertLatex.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                CancelConvertLatexActionPerformed(evt);
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        VirtualConsolArea.setColumns(20);
+        VirtualConsolArea.setRows(5);
+        jScrollPane1.setViewportView(VirtualConsolArea);
 
-        jButton4.setText("Convert");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        ConvertCR.setText("Convert");
+        ConvertCR.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                ConvertCRActionPerformed(evt);
             }
         });
 
-        jButton5.setText("cancel");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        CancelConvertCR.setText("cancel");
+        CancelConvertCR.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                CancelConvertCRActionPerformed(evt);
             }
         });
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        ClassFilePath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                ClassFilePathActionPerformed(evt);
             }
         });
 
-        jButton6.setText("Java Class");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        ClassFC.setText("Java Class");
+        ClassFC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                ClassFCActionPerformed(evt);
             }
         });
 
-        jButton7.setText("Java Test Class");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        TestClassFC.setText("Java Test Class");
+        TestClassFC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                TestClassFCActionPerformed(evt);
             }
         });
 
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        TestClassFilePath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                TestClassFilePathActionPerformed(evt);
             }
         });
 
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        LatexOutputFilePath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                LatexOutputFilePathActionPerformed(evt);
             }
         });
 
-        jButton8.setText("Destination Path/name");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        LatexOutputFC.setText("Destination Path\\name");
+        LatexOutputFC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                LatexOutputFCActionPerformed(evt);
+            }
+        });
+
+        CROutputFC.setText("Destination Path\\name");
+        CROutputFC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CROutputFCActionPerformed(evt);
+            }
+        });
+
+        ClassOutputFilePath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ClassOutputFilePathActionPerformed(evt);
             }
         });
 
@@ -152,155 +162,172 @@ public class MainForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(144, 144, 144)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(TestClassFC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ClassFC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(LatexFC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(LatexOutputFC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(CROutputFC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ClassFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(LatexFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TestClassFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(LatexOutputFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ClassOutputFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ConvertLatex)
+                                    .addComponent(ConvertCR))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(289, 289, 289)
-                        .addComponent(jButton2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton3))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(289, 289, 289)
-                        .addComponent(jButton4)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton5)))
-                .addContainerGap(116, Short.MAX_VALUE))
+                                    .addComponent(CancelConvertLatex)
+                                    .addComponent(CancelConvertCR))))))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(61, 61, 61)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(LatexFC)
+                    .addComponent(LatexFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton8))
-                .addGap(18, 18, 18)
+                    .addComponent(LatexOutputFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(LatexOutputFC))
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton2))
-                .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
+                    .addComponent(CancelConvertLatex)
+                    .addComponent(ConvertLatex))
                 .addGap(32, 32, 32)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(133, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ClassFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ClassFC))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TestClassFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TestClassFC))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CROutputFC)
+                    .addComponent(ClassOutputFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ConvertCR)
+                    .addComponent(CancelConvertCR))
+                .addGap(35, 35, 35)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void LatexFCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LatexFCActionPerformed
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(null);
         File f = chooser.getSelectedFile();
         String path = f.getAbsolutePath();
-        jTextField1.setText(path);
-    }//GEN-LAST:event_jButton1ActionPerformed
+        LatexFilePath.setText(path);
+    }//GEN-LAST:event_LatexFCActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void LatexFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LatexFilePathActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_LatexFilePathActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void CancelConvertLatexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelConvertLatexActionPerformed
         // TODO add your handling code here:
-        jTextField1.setText("");
-        jTextField4.setText("");
-    }//GEN-LAST:event_jButton3ActionPerformed
+        LatexFilePath.setText("");
+        LatexOutputFilePath.setText("");
+    }//GEN-LAST:event_CancelConvertLatexActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void ConvertLatexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConvertLatexActionPerformed
         // TODO add your handling code here:
-        String stin = jTextField1.getText();
-        String stout = jTextField4.getText();
+        String stin = LatexFilePath.getText();
+        String stout = LatexOutputFilePath.getText();
         TestRead tr = new TestRead(stin, stout);
         //run();
        
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_ConvertLatexActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void ConvertCRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConvertCRActionPerformed
         // TODO add your handling code here:
-        String Classpath = jTextField2.getText();
-        String Testpath = jTextField3.getText();
+        String Classpath = ClassFilePath.getText();
+        String Testpath = TestClassFilePath.getText();
+        String Outputpath = ClassOutputFilePath.getText();
         try {
-            TestRead_CR tr_cr = new TestRead_CR(Classpath, Testpath);
+            TestRead_CR tr_cr = new TestRead_CR(Classpath, Testpath, Outputpath);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_ConvertCRActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void CancelConvertCRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelConvertCRActionPerformed
         // TODO add your handling code here:
-        jTextField2.setText("");
-        jTextField3.setText("");
-    }//GEN-LAST:event_jButton5ActionPerformed
+        ClassFilePath.setText("");
+        TestClassFilePath.setText("");
+        ClassOutputFilePath.setText("");
+    }//GEN-LAST:event_CancelConvertCRActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void ClassFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClassFilePathActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_ClassFilePathActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-        JFileChooser chooser = new JFileChooser();
-        chooser.showOpenDialog(null);
-        File f = chooser.getSelectedFile();
-        String path = f.getAbsolutePath();
-        jTextField2.setText(path);
-    }//GEN-LAST:event_jButton6ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void ClassFCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClassFCActionPerformed
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(null);
         File f = chooser.getSelectedFile();
         String path = f.getAbsolutePath();
-        jTextField3.setText(path);
-    }//GEN-LAST:event_jButton7ActionPerformed
+        ClassFilePath.setText(path);
+    }//GEN-LAST:event_ClassFCActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
-
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
-
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void TestClassFCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TestClassFCActionPerformed
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(null);
         File f = chooser.getSelectedFile();
         String path = f.getAbsolutePath();
-        jTextField4.setText(path);
-    }//GEN-LAST:event_jButton8ActionPerformed
+        TestClassFilePath.setText(path);
+    }//GEN-LAST:event_TestClassFCActionPerformed
+
+    private void TestClassFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TestClassFilePathActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TestClassFilePathActionPerformed
+
+    private void LatexOutputFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LatexOutputFilePathActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_LatexOutputFilePathActionPerformed
+
+    private void LatexOutputFCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LatexOutputFCActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f = chooser.getSelectedFile();
+        String path = f.getAbsolutePath();
+        LatexOutputFilePath.setText(path);
+    }//GEN-LAST:event_LatexOutputFCActionPerformed
+
+    private void CROutputFCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CROutputFCActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f = chooser.getSelectedFile();
+        String path = f.getAbsolutePath();
+        ClassOutputFilePath.setText(path);
+    }//GEN-LAST:event_CROutputFCActionPerformed
+
+    private void ClassOutputFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClassOutputFilePathActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ClassOutputFilePathActionPerformed
 
     /**
      * @param args the command line arguments
@@ -363,7 +390,7 @@ public class MainForm extends javax.swing.JFrame {
   public void updateTextArea(final String text) {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        jTextArea1.append(text);
+        VirtualConsolArea.append(text);
       }
     });
   }
@@ -392,19 +419,21 @@ public class MainForm extends javax.swing.JFrame {
   }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
+    private javax.swing.JButton CROutputFC;
+    private javax.swing.JButton CancelConvertCR;
+    private javax.swing.JButton CancelConvertLatex;
+    private javax.swing.JButton ClassFC;
+    private javax.swing.JTextField ClassFilePath;
+    private javax.swing.JTextField ClassOutputFilePath;
+    private javax.swing.JButton ConvertCR;
+    private javax.swing.JButton ConvertLatex;
+    private javax.swing.JButton LatexFC;
+    private javax.swing.JTextField LatexFilePath;
+    private javax.swing.JButton LatexOutputFC;
+    private javax.swing.JTextField LatexOutputFilePath;
+    private javax.swing.JButton TestClassFC;
+    private javax.swing.JTextField TestClassFilePath;
+    private javax.swing.JTextArea VirtualConsolArea;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 }
