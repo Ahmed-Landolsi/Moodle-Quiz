@@ -1,0 +1,171 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage[latin1]{inputenc}
+\title{Quiz-Test}
+\author{Hochschule Fulda}
+\date{\today}
+\usepackage{verbatim}
+%\newenvironment {code} [0] { \begin{verbatim} } { \end{verbatim} }
+
+\begin{document}
+%\newcommand{\multichoiceparams} [1]{$$#1$$}
+
+\newcommand\question[1]%
+    {\def\domyverb##1#1{\vspace{1cm} QUESTION: $`##1'$}%
+     \domyverb}
+
+\newcommand\answer[1]%
+    {\def\domyverb##1#1{\\$Answer: `##1'$}%
+     \domyverb}
+
+\newcommand\name[1]%
+    {\def\domyverb##1#1{\vspace{1cm} NAME: `##1'}%
+     \domyverb}
+
+
+%\maketitle{SS 2018, Woche 2: Imperative Sprachkonzepte}
+
+
+\name|SS18-W2-Imperative-Sprachkonzepte|
+
+\question|type="multichoice", format="moodle_auto_format", shuffle=true, single=true, answernumbering=ABCD, hidden=0, penalty=0.0, defaultgrade=1.0|
+
+\subsection{While-Schleifen 1}
+Wie oft druckt das folgende Code-Snippet etwas aus?
+
+\begin{figure}
+  \centering
+  \reflectbox{ \includegraphics[scale=0.75]{C:/Users/foufou/Desktop/LatexUnits.PNG}}
+  \caption{Une image du même toucan regardant dans l'autre sens!}
+  \label{toucan}
+\end{figure}
+
+\begin{wrapfigure}{r}{40mm}
+  \centering
+  \includegraphics[scale=0.75]{C:/Users/foufou/Desktop/LatexUnits.PNG}
+  \caption{Le toucan}
+\end{wrapfigure}
+
+\begin{figure}[htp]
+  \centering
+  \subfloat[Image d'origine]{\label{fig:edge-a}\includegraphics[scale=0.75]{C:/Users/foufou/Desktop/LatexUnits.PNG}}
+  \hspace{5pt}
+  \subfloat[Après une détection des contours de Laplace]{\label{fig:contour-b}\includegraphics[scale=0.75]{C:/Users/foufou/Desktop/LatexUnits.PNG}}
+  \hspace{5pt}
+  \subfloat[Après une détection des contours de Sobel]{\label{fig:contour-c}\includegraphics[scale=0.75]{C:/Users/foufou/Desktop/LatexUnits.PNG}}
+  \caption{Différents algorithmes de détection des contours}
+  \label{fig:contour}
+\end{figure}
+\begin{verbatim}int i = 10 ;
+while (i < 10) {
+  System.out.println(i) ;
+  i++ ;
+}
+\end{verbatim}
+\begin{itemize}
+\item 1 
+\begin{figure}
+  \centering
+  \reflectbox{ \includegraphics[scale=0.75]{C:/Users/foufou/Desktop/LatexUnits.PNG}}
+  \caption{Une image du même toucan regardant dans l'autre sens!}
+  \label{toucan}
+\end{figure}
+\item 2
+\item Gar nicht
+\answer|fraction=100, format="moodle_auto_format", feedback="stimmt!"|
+\item 10
+\item 11
+\answer|fraction=100, format="moodle_auto_format", feedback="stimmt!"|
+\end{itemize}
+
+
+\question|type="numerical", format="moodle_auto_format", defaultgrade=1.0, correctfeedback="jawoll", partiallycorrectfeedback="nicht ganz", incorrectfeedback="nope", units="times:1", unitpenalty=0., showunits=0, unitsleft=0, unitgradingtype=0|
+
+\subsection{While-Schleifen 2}
+Wie oft druckt das folgende Code-Snippet "X"?
+\begin{verbatim}int i = 3 ;
+while (i < 12) {
+  System.out.println("X") ;
+  i++ ;
+  if (i > 5) {
+    break ;
+  }
+}
+\end{verbatim}
+\begin{itemize}
+\item 4
+\answer|fraction=50 , tolerance=0, feedback="knapp daneben!"|
+\item 3
+\answer|fraction=100, feedback="genau!"|
+\item 2
+\answer|fraction=100, feedback="genau!"|
+\end{itemize}
+
+
+\question|type="multichoice", format="moodle_auto_format", shuffle=true, single=false, answernumbering=ABCD, hidden=0, penalty=0.5, defaultgrade=2.0|
+
+\subsection{Test Section Tittel als frage Tittel}
+Wellcome to LaTeXtoXML file converter \includegraphics[width=50pt, heigth=50mm]{C:/Users/foufou/Desktop/LatexUnits.PNG} gjhjhlkhfsfsfs� ksj� \includegraphics[heigth=5cm , width=3cm]{C:/Users/foufou/Desktop/LatexUnits.PNG} dsjf�sgj�gs  \includegraphics[width=5in]{C:/Users/foufou/Desktop/LatexUnits.PNG}
+\begin{itemize}
+\item cccc
+\item aaaa
+\item yes-bbbb   (richtige Antwort)
+\answer|fraction=100, format="moodle_auto_format", feedback="right answer"|
+\item qqqq
+$$\frac{1}{2\pi}\int_{-\infty}^{\infty}e^{-\frac{x^2}{2}}dx$$
+\item kkkk 
+\item yes-pppp
+\answer|fraction=100, format="moodle_auto_format", feedback="bad answer even though is right"|
+\end{itemize}
+
+\question|type="numerical", format="moodle_auto_format", defaultgrade=2.0, correctfeedback="this is the correct feedback", partiallycorrectfeedback="this is the partially correct feedback", incorrectfeedback="this is the incorect feedback", units="kg:20/m:50/bar:1", unitpenalty=0.55, showunits=1, unitsleft=0, unitgradingtype=1| 
+
+\subsection{frage test numerical}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit
+sed do eiusmod tempor incididunt ut labore et dolore magnaaliqua Ut enim ad minim veniam,quis nostrud. 
+exercitation
+\begin{itemize}
+\item 2
+\answer|fraction=50 , tolerance=2|
+\item 10
+\answer|fraction=100, feedback="biennnn"|
+\end{itemize}
+
+\question|type="shortanswer", format="moodle_auto_format", usecase=1, defaultgrade=2.0|
+
+\subsection{Test frage Short Answer}	
+Wähle eine Buchstabe aus {a,b,c,d,e,f,g}
+\begin{itemize} 	
+\item a b c
+\answer|fraction=70, feedback="ok nicht schlecht"|
+\item b
+\answer|fraction=50, feedback="passt auch"|
+\item c
+\answer|fraction=100, feedback="gut gemacht"|
+\end{itemize}      	
+
+\question|type="truefalse", format="moodle_auto_format", generalfeedback="this is the general feedback", defaultgrade=1.0|
+
+\subsection{Test Frage true false}
+are you serious?
+\begin{itemize}
+\item false
+\item true
+\answer|fraction=100|
+\end{itemize}
+
+\question|type="matching", format="moodle_auto_format", generalfeedback="this is the general feedback", defaultgrade=1.0, shuffle=false|
+
+\subsection{test matching}
+matche this ...
+\begin{itemize}
+\item sunbquestionAnswertext 1
+\answer|text="SubquestionText1"|
+\item sunbquestionAnswertext 2
+\answer|text="SubquestionText2"|
+\item sunbquestionAnswertext 3
+\answer|text="SubquestionText3"|
+\item sunbquestionAnswertext 4 (Falsch)
+\end{itemize}
+
+\end{document}
