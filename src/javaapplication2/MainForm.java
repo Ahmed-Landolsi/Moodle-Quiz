@@ -27,11 +27,13 @@ public class MainForm extends javax.swing.JFrame {
 
         Console console = new Console();
         console.run();
+        /**
         LatexFilePath.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\JavaApplication2\\quizW4[2075].tex.txt");
         ClassFilePath.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\WebApplication1\\test\\sum.java");
         TestClassFilePath.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\WebApplication1\\test\\sumTest.java");
         LatexOutputFilePath.setText("D:\\LatexQuiz.xml");
         ClassOutputFilePath.setText("D:\\CodeRunnerQuiz.xml");
+         */
     }
 
     /**
