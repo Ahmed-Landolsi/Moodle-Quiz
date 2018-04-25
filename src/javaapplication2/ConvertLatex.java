@@ -18,11 +18,19 @@ import javax.swing.JOptionPane;
 
 
 
-public class TestRead {
-    TestRead(String text, String output) {
-            main(text, output);
-        }
-    public static void main(String file, String output) {
+public class ConvertLatex {
+
+    static List<String[]> CodeSnippetList = new ArrayList<>();
+    
+    ConvertLatex(String text, String output) {
+            ReadFile(text, output);
+    }
+    
+    public static void main(String[] args) {
+        ReadFile(args[0],args[1]); //For CMD: first Argument is the Latex-File Path and the second one is the ouput path
+    }
+    
+    public static void ReadFile(String file, String output) {
         String outputpath = output;
         Pattern patternQuestion;
         Pattern patternAnswer;
@@ -65,6 +73,7 @@ public class TestRead {
             ArrayList<List<String>> question;
             ArrayList<List<String>> response;
             try (BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"))) {  //ISO-8859-15
+                System.out.println("\n*** Start reading File: " + file +" ***\n");
                 String strLine;
                 category = "";
                 int answerWriter = 0;
@@ -104,30 +113,35 @@ public class TestRead {
                     if(matcherQuestion.find()) { // findet frage: ....
                         if (matcherIsMc.find()) { //findet "multichoice"
                             IsMcQuestion = true;
+                            System.out.println("Question found  type: multichoice");
                             questionParamsArray.add(strLine);
                             questionParams.add(questionParamsArray);
                             questionParamsArray = new ArrayList<>();
                         }
                         if (matcherIsTF.find()) { //findet "truefalse"
                             IsTFQuestion = true;
+                            System.out.println("Question found  type: truefalse");
                             questionParamsArray.add(strLine);
                             questionParams.add(questionParamsArray);
                             questionParamsArray = new ArrayList<>();
                         }
                         if (matcherIsSA.find()) { //findet "shortanswer"
                             IsSAQuestion = true;
+                            System.out.println("Question found  type: shortanswer");
                             questionParamsArray.add(strLine);
                             questionParams.add(questionParamsArray);
                             questionParamsArray = new ArrayList<>();
                         }
                         if (matcherIsNUM.find()) { //findet "numerical"
                             IsNUMQuestion = true;
+                            System.out.println("Question found  type: numerical");
                             questionParamsArray.add(strLine);
                             questionParams.add(questionParamsArray);
                             questionParamsArray = new ArrayList<>();
                         }
                         if (matcherIsMAT.find()) { //findet "matching"
                             IsMATQuestion = true;
+                            System.out.println("Question found  type: matching");
                             questionParamsArray.add(strLine);
                             questionParams.add(questionParamsArray);
                             questionParamsArray = new ArrayList<>();
@@ -177,13 +191,13 @@ public class TestRead {
                     myList.add(Arrays.toString(kk)); // add params array in one List of all questions params
                 });
             });
-            System.out.println("questParams final: " + myList);
+            //System.out.println("questParams final: " + myList);
             //OutprintObject(myList);
 // List of String myList.get(0) --> string contains first question params
-            System.out.println("questions final: " + question);
+            //System.out.println("questions final: " + question);
             //OutprintObject(question);
 // List of List of String question.get(0) --> list of string contains first question text
-            System.out.println("responses final: " + response);
+            //System.out.println("responses final: " + response);
             //OutprintObject(response);
 // List of List of String response.get(0) --> list of string contains first question answers
             generalFetcher(outputpath, category, myList, question, response);
@@ -197,7 +211,10 @@ public class TestRead {
     public static void generalFetcher (String output, String category, List<String> myList, ArrayList<List<String>> question, ArrayList<List<String>> response){
             Quiz quiz = new Quiz();
             quiz.setCategory(category);
-            System.out.println("\n----------Quiz Startet-------------\n");
+            System.out.println("\n*** Start parsing Quiz ***\n");
+            System.out.println("Quiz name:  "+category);
+            System.out.println(myList.size()+" Questions were found");
+            //System.out.println("\n----------Quiz Startet-------------\n");
             for (int i = 0; i < myList.size(); i++) {
                 if (myList.get(i).contains("multichoice")){
                     try {
@@ -205,7 +222,7 @@ public class TestRead {
                         MCQ = MultichoiceFetcher(myList.get(i),question.get(i),response.get(i));
                         quiz.setQuestions(MCQ);
                     } catch (IOException ex) {
-                        Logger.getLogger(TestRead.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ConvertLatex.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else if (myList.get(i).contains("truefalse")){
                     try {
@@ -213,7 +230,7 @@ public class TestRead {
                         TFQ = TrueFalseFetcher(myList.get(i),question.get(i),response.get(i));
                         quiz.setQuestions(TFQ);
                     } catch (IOException ex) {
-                        Logger.getLogger(TestRead.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ConvertLatex.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else if (myList.get(i).contains("shortanswer")){
                     try {
@@ -221,7 +238,7 @@ public class TestRead {
                         SAQ = ShortAnswerFetcher(myList.get(i),question.get(i),response.get(i));
                         quiz.setQuestions(SAQ);
                     } catch (IOException ex) {
-                        Logger.getLogger(TestRead.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ConvertLatex.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else if (myList.get(i).contains("numerical")){
                     try {
@@ -229,7 +246,7 @@ public class TestRead {
                         NUMQ = NumericalFetcher(myList.get(i),question.get(i),response.get(i));
                         quiz.setQuestions(NUMQ);
                     } catch (IOException ex) {
-                        Logger.getLogger(TestRead.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ConvertLatex.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else if (myList.get(i).contains("matching")){
                     try {
@@ -237,14 +254,16 @@ public class TestRead {
                         MATQ = MatchingFetcher(myList.get(i),question.get(i),response.get(i));
                         quiz.setQuestions(MATQ);
                     } catch (IOException ex) {
-                        Logger.getLogger(TestRead.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ConvertLatex.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
             OutputToXml(quiz, output);
+            OutputToJava(output);
     }
     
     public static MultiChoiceQuestion MultichoiceFetcher (String paramsList,  List<String> questionsList, List<String> answersList) throws IOException{
+            System.out.println("Parsing Multichoice Question...");
             Pattern pi;
             pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})"); //  detect {path}
             Pattern patternParamType = Pattern.compile("type=\"multichoice\"");
@@ -253,9 +272,13 @@ public class TestRead {
             String[] split = paramsList.split(", ");
             String first = questionsList.get(0).replaceAll("\\\\subsection\\{", "").replaceAll("\\}", "");
             List sublist = questionsList.subList(1, questionsList.size());
-            //String QuestionTextJoined = String.join("<br>", sublist);
-            //String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
-            String QuestionTextJoinedProcessed = String.join("<br>", sublist).replace("\\begin{verbatim}","<pre><code>").replace("\\end{verbatim}","</code></pre>");
+            
+            GetVerbatim(String.join(" ", sublist), first);
+            
+            String QuestionTextJoinedProcessed_old = String.join("<br>", sublist).replace("\\begin{verbatim}","<pre><code>").replace("\\end{verbatim}","</code></pre>");
+            
+            String QuestionTextJoinedProcessed = RemoveLatexGE(QuestionTextJoinedProcessed_old).replaceAll("(\\s?<br>\\s?){1,}", "<br>");
+                      
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
             String AswerTextJoined = String.join(" ", answersList);
             String[] parsedString = AswerTextJoined.split("\\\\item");
@@ -318,7 +341,8 @@ public class TestRead {
             
             for (String answer : parsedString) {
                 if (!answer.isEmpty() && !isNull(answer)) {
-                    String newstr = answer.replaceAll("\\\\answer\\|(.*)\\|", ""); ////"[^\\w]answer\\|.*?\\|"
+                    String newstr_old = answer.replaceAll("\\\\answer\\|(.*)\\|", ""); ////"[^\\w]answer\\|.*?\\|"
+                    String newstr = RemoveLatexGE(newstr_old).replaceAll("(\\s?<br>\\s?){1,}", "<br>");
                     Answer answerObj = new Answer();
                     Matcher mia = pi.matcher(newstr); 
                     answerObj.setText("<p>" + newstr + "<br></p>\n");
@@ -358,11 +382,12 @@ public class TestRead {
                 }
             }
 
-            System.out.printf("\n--Begin question--\n");
+            //System.out.printf("\n--Begin question--\n");
             return MCQ;
     }
     
     public static TrueFalseQuestion TrueFalseFetcher (String paramsList,  List<String> questionsList, List<String> answersList) throws IOException{
+            System.out.println("Parsing TrueFalse Question...");
             Pattern pi;
             pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})"); //  detect {path}
             Pattern patternParamType = Pattern.compile("type=\"truefalse\"");
@@ -371,9 +396,13 @@ public class TestRead {
             String[] split = paramsList.split(", ");
             String first = questionsList.get(0).replaceAll("\\\\subsection\\{", "").replaceAll("\\}", "");
             List sublist = questionsList.subList(1, questionsList.size());
-            //String QuestionTextJoined = String.join("<br>", sublist);
-            //String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
-            String QuestionTextJoinedProcessed = String.join("<br>", sublist).replace("\\begin{verbatim}","<pre><code>").replace("\\end{verbatim}","</code></pre>");
+            
+            GetVerbatim(String.join(" ", sublist), first);
+            
+            String QuestionTextJoinedProcessed_old = String.join("<br>", sublist).replace("\\begin{verbatim}","<pre><code>").replace("\\end{verbatim}","</code></pre>");
+            
+            String QuestionTextJoinedProcessed = RemoveLatexGE(QuestionTextJoinedProcessed_old).replaceAll("(\\s?<br>\\s?){1,}", "<br>");
+            
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
             String AswerTextJoined = String.join(" ", answersList);
             String[] parsedString = AswerTextJoined.split("\\\\item");
@@ -455,11 +484,12 @@ public class TestRead {
                 }
             }
 
-            System.out.printf("\n--Begin question--\n");
+            //System.out.printf("\n--Begin question--\n");
             return TFQ;
     }
     
     public static ShortAnswerQuestion ShortAnswerFetcher (String paramsList,  List<String> questionsList, List<String> answersList) throws IOException{
+            System.out.println("Parsing ShortAnswer Question...");
             Pattern pi;
             pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})"); //  detect {path}
             Pattern patternParamType = Pattern.compile("type=\"shortanswer\"");
@@ -468,9 +498,13 @@ public class TestRead {
             String[] split = paramsList.split(", ");
             String first = questionsList.get(0).replaceAll("\\\\subsection\\{", "").replaceAll("\\}", "");
             List sublist = questionsList.subList(1, questionsList.size());
-            //String QuestionTextJoined = String.join("<br>", sublist);
-            //String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
-            String QuestionTextJoinedProcessed = String.join("<br>", sublist).replace("\\begin{verbatim}","<pre><code>").replace("\\end{verbatim}","</code></pre>");
+            
+            GetVerbatim(String.join(" ", sublist), first);
+            
+            String QuestionTextJoinedProcessed_old = String.join("<br>", sublist).replace("\\begin{verbatim}","<pre><code>").replace("\\end{verbatim}","</code></pre>");
+            
+            String QuestionTextJoinedProcessed = RemoveLatexGE(QuestionTextJoinedProcessed_old).replaceAll("(\\s?<br>\\s?){1,}", "<br>");
+            
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
             String AswerTextJoined = String.join(" ", answersList);
             String[] parsedString = AswerTextJoined.split("\\\\item");
@@ -553,11 +587,12 @@ public class TestRead {
                     }
                 }
             }
-            System.out.printf("\n--Begin question--\n");
+            //System.out.printf("\n--Begin question--\n");
             return SAQ;
     }
     
     public static NumericalQuestion NumericalFetcher (String paramsList,  List<String> questionsList, List<String> answersList) throws IOException{
+            System.out.println("Parsing Numerical Question...");
             Pattern pi;
             pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})"); //  detect {path}
             Pattern patternParamType = Pattern.compile("type=\"numerical\"");
@@ -566,9 +601,13 @@ public class TestRead {
             String[] split = paramsList.split(", ");
             String first = questionsList.get(0).replaceAll("\\\\subsection\\{", "").replaceAll("\\}", "");
             List sublist = questionsList.subList(1, questionsList.size());
-            //String QuestionTextJoined = String.join("<br>", sublist);
-            //String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
-            String QuestionTextJoinedProcessed = String.join("<br>", sublist).replace("\\begin{verbatim}","<pre><code>").replace("\\end{verbatim}","</code></pre>");
+            
+            GetVerbatim(String.join(" ", sublist), first);
+            
+            String QuestionTextJoinedProcessed_old = String.join("<br>", sublist).replace("\\begin{verbatim}","<pre><code>").replace("\\end{verbatim}","</code></pre>");
+            
+            String QuestionTextJoinedProcessed = RemoveLatexGE(QuestionTextJoinedProcessed_old).replaceAll("(\\s?<br>\\s?){1,}", "<br>");
+            
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
             String AswerTextJoined = String.join(" ", answersList);
             String[] parsedString = AswerTextJoined.split("\\\\item");
@@ -678,11 +717,12 @@ public class TestRead {
                 }
             }
 
-            System.out.printf("\n--Begin question--\n");
+            //System.out.printf("\n--Begin question--\n");
             return NUMQ;
     }
     
     public static MatchingQuestion MatchingFetcher (String paramsList,  List<String> questionsList, List<String> answersList) throws IOException{
+            System.out.println("Parsing Matching Question...");
             Pattern pi;
             pi = Pattern.compile("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})"); //  detect {path}
             Pattern patternParamType = Pattern.compile("type=\"matching\"");
@@ -691,9 +731,13 @@ public class TestRead {
             String[] split = paramsList.split(", ");
             String first = questionsList.get(0).replaceAll("\\\\subsection\\{", "").replaceAll("\\}", "");
             List sublist = questionsList.subList(1, questionsList.size());
-            //String QuestionTextJoined = String.join("<br>", sublist);
-            //String QuestionTextJoinedProcessed = "<p style=\"display:inline;\">"+QuestionTextJoined+"<br></p>\n";
-            String QuestionTextJoinedProcessed = String.join("<br>", sublist).replace("\\begin{verbatim}","<pre><code>").replace("\\end{verbatim}","</code></pre>");
+            
+            GetVerbatim(String.join(" ", sublist), first);
+            
+            String QuestionTextJoinedProcessed_old = String.join("<br>", sublist).replace("\\begin{verbatim}","<pre><code>").replace("\\end{verbatim}","</code></pre>");
+            
+            String QuestionTextJoinedProcessed = RemoveLatexGE(QuestionTextJoinedProcessed_old).replaceAll("(\\s?<br>\\s?){1,}", "<br>");
+            
             Matcher mi = pi.matcher(QuestionTextJoinedProcessed); 
             String AswerTextJoined = String.join(" ", answersList);
             String[] parsedString = AswerTextJoined.split("\\\\item");
@@ -758,7 +802,6 @@ public class TestRead {
                         answerParams[0] = m1.group(1);
                         if (answerParams[0].contains(",")) {
                             answerParams = m1.group(1).split(", ");
-                            System.out.println(Arrays.toString(answerParams));
                         }
                         for (String ap : answerParams) {
                             String[] parameterAnswer = paramSplitter(ap);
@@ -774,7 +817,7 @@ public class TestRead {
                     }
                 }
             }
-            System.out.printf("\n--Begin question--\n");
+            //System.out.printf("\n--Begin question--\n");
             return MATQ;
     }
     
@@ -794,7 +837,7 @@ public class TestRead {
             try {
                 value = field.get(obj);
             } catch (IllegalArgumentException | IllegalAccessException ex) {
-                Logger.getLogger(TestRead.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ConvertLatex.class.getName()).log(Level.SEVERE, null, ex);
             }
             System.out.printf("%s: %s%n", name, value);
         }
@@ -807,16 +850,19 @@ public class TestRead {
 
     public static void OutputToXml(Quiz quiz, String output) {
         try {
-            String out = output;
+            System.out.println("\n*** Start Writing to Output ***\n");
+            String out = output;            
             File file = new File(out);
             JAXBContext jaxbContext = JAXBContext.newInstance(Quiz.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_ENCODING, "ISO-8859-15"); //"UTF-8"
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(quiz, file);
+            System.out.println("###### File was successfully converted ######");
             JOptionPane.showMessageDialog(null, "Conversion done!   Please check your file on this path:\n"+file);            
         } catch (JAXBException e) {
             JOptionPane.showMessageDialog(null, "Error in marshalling..."+e.toString());
+            System.out.println("###### Error in marshalling..."+e.toString()+" ######");
         }  
     }
     
@@ -833,7 +879,7 @@ public class TestRead {
             File f = new File(tmp1);
             imageAr[0] = f.getAbsolutePath().substring(f.getAbsolutePath().lastIndexOf("\\") + 1);
             imageAr[1] = base46Image;
-            str = str.replaceFirst("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\})", "<p style=\"display:inline;\"><img src=\"@@PLUGINFILE@@/" + imageAr[0] + "\" role=\"presentation\" style=\"vertical-align:middle; margin:0.5em; " + ImageParams + "\" /></p>");
+            str = str.replaceFirst("\\\\includegraphics\\[(([^]]+)\\]\\{([^}]+)\\}(\\})?)", "<p style=\"display:inline;\"><img src=\"@@PLUGINFILE@@/" + imageAr[0] + "\" role=\"presentation\" style=\"vertical-align:middle; margin:0.5em; " + ImageParams + "\" /></p>");
             imageAr[2] = str;
             list.add(imageAr);
         }
@@ -841,8 +887,10 @@ public class TestRead {
     }
     
     public static String encoder(String imagePath) throws MalformedURLException, IOException {
-	String base64Image = "";
+	System.out.println("    -- Start Image encoder --");
+        String base64Image = "";
         if(imagePath.contains("https:")|| imagePath.contains("http:")){
+            System.out.println("        --- Start getting Image from URL:   " +imagePath);
             URL imageURL = new URL(imagePath);
             System.out.println(imageURL);
             OutputStream out;
@@ -939,9 +987,47 @@ public class TestRead {
         return Result;
     }
 
-    
-// function to display programm running infos in the Text area of the main form    
-//      private void updateTextArea(final String text) { 
-//      }
+    public static String RemoveLatexGE (String paramstring){
+        String str = paramstring;
+        String strFinal="";
+        strFinal = str.replaceAll("\\\\begin\\{wrapfigure\\}(\\{.*?\\})?(\\{.*?\\})?|\\\\begin\\{figure\\}(\\[.*?\\])?|\\\\end\\{wrapfigure\\}|\\\\end\\{figure\\}|\\\\centering|\\\\label\\{.*?\\}|\\\\caption\\{.*?\\}|\\\\hspace\\{.*?\\}|\\\\subfloat\\[{1}.*?\\]{1}\\{{1}|\\\\reflectbox\\{{1}", ""); 
+        return strFinal;
+    }
 
-}
+    public static void GetVerbatim (String str, String QuestionName){
+        String st = str;
+        String[] result = new String[2] ;
+        Pattern p = Pattern.compile("(\\\\begin\\{verbatim\\})(.*?)(\\\\end\\{verbatim\\})");
+        Matcher m = p.matcher(st);
+        while(m.find()){
+            result[0] = QuestionName;
+            result[1] = m.group(2);
+            CodeSnippetList.add(result);
+        }
+    }
+    
+    public static void OutputToJava (String out){
+        String out2 = out.replaceAll(".xml|.XML", ".java");
+        File VerbatimClassFile = new File(out2);
+        try (FileWriter writer = new FileWriter(VerbatimClassFile, true)) {
+            writer.write("\npublic class " + VerbatimClassFile.getName().replaceAll(".java", "") + "{");
+            writer.write("\npublic static void main(String[] args) {\n");
+            CodeSnippetList.forEach((temp) -> {
+                String header = "\n/*--- Code snippet for question:    " + temp[0] + "    ---*/\n";
+                String snippet = "{\n" + temp[1] + "\n}\n";
+                try {
+                    writer.write(header);
+                    writer.write(snippet);
+                } catch (IOException ex) {
+                    Logger.getLogger(ConvertLatex.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            writer.write("\n}\n}");
+            System.out.println("###### Code-Snippets Java File was successfully generated ######");
+        } catch (IOException e) {
+            System.out.println("###### Error in writung code-Snippets to Java File..." + e.toString() + " ######");
+        }
+    }
+    
+    
+} 

@@ -13,15 +13,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import static javaapplication2.TestRead.OutputToXml;
 import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -32,14 +29,23 @@ import javax.xml.bind.Marshaller;
  *
  * @author foufou
  */
-class TestRead_CR {
+class ConvertJava {
 
-    TestRead_CR(String Classpath, String Testpath, String Output) throws NullPointerException, FileNotFoundException, UnsupportedEncodingException, IOException {
-        //System.out.println("class: " + Classpath + "\n test: " + Testpath);
-        main(Classpath, Testpath, Output);
+    ConvertJava(String Classpath, String Testpath, String Output) throws NullPointerException, FileNotFoundException, UnsupportedEncodingException, IOException {
+        ReadFile(Classpath, Testpath, Output);
     }
-
-    public static void main(String Classpath, String Testpath, String Output) throws FileNotFoundException, UnsupportedEncodingException, IOException {
+    
+    public static void main(String[] args) {
+        try {
+            ReadFile(args[0],args[1],args[2]);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(ConvertJava.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ConvertJava.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static void ReadFile(String Classpath, String Testpath, String Output) throws FileNotFoundException, UnsupportedEncodingException, IOException {
         String OutputPath = Output;
         Pattern patternParams;
         Matcher matcherParams;
@@ -64,6 +70,8 @@ class TestRead_CR {
         DataInputStream inC = new DataInputStream(fstreamC);
         BufferedReader brC = new BufferedReader(new InputStreamReader(inC, "ISO-8859-15"));
         String strLineC;
+        
+        System.out.println("\n*** Start reading Class File: " + Classpath +" ***\n");
         while ((strLineC = brC.readLine()) != null) {
             matcherParams = patternParams.matcher(strLineC);
             matcherClass = patternClass.matcher(strLineC);
@@ -98,6 +106,7 @@ class TestRead_CR {
         BufferedReader brT = new BufferedReader(new InputStreamReader(inT, "ISO-8859-15"));
         String strLineT;
         String buffer="";
+        System.out.println("\n*** Start reading Test Class File: " + Testpath +" ***\n");
         while ((strLineT = brT.readLine()) != null) {
             buffer+=strLineT.trim();
         }
@@ -113,6 +122,7 @@ class TestRead_CR {
     
     public static void CRFetcher(String QuestionAnswerJoined, String[] ParamsArrays, List<String> TestParams, List<String> TestMethodes, String OutputPath) {
         CR_Quiz quiz = new CR_Quiz();
+        System.out.println("\n*** Start parsing Code Runner Question ***\n");
         CR_Question crq = new CR_Question();
         crq.setAnswer(QuestionAnswerJoined);
         Pattern patternClass;
@@ -148,6 +158,7 @@ class TestRead_CR {
                 }
                 if (xy[0].trim().contains("coderunnertype")) {
                     crq.setCoderunnertype(paramValue.trim());
+                    System.out.println("Code Runner Question Type:  "+paramValue);
                 }
                 if (xy[0].trim().contains("prototypetype")) {
                     crq.setPrototypetype(Integer.parseInt(paramValue.trim()));
@@ -224,9 +235,11 @@ class TestRead_CR {
                 if (xy[0].trim().contains("quiz")) {
                     crq.setFormat("html");
                     quiz.setCategory(paramValue);
+                    System.out.println("Quiz name:  "+paramValue);
                 }
             }
         }
+        System.out.println(TestParams.size()+" Test Cases were found");
         for (int i = 0; i < TestParams.size(); i++) {
         CR_Testcase tc = new CR_Testcase();
         ArrayList<String[]> x = TestParamSplitter(TestParams.get(i));
@@ -276,6 +289,7 @@ class TestRead_CR {
     
     public static void OutputToXml(CR_Quiz quiz, String output) {
         try {
+            System.out.println("\n*** Start Writing to Output ***\n");
             String out = output;
             File file = new File(out);
             JAXBContext jaxbContext = JAXBContext.newInstance(CR_Quiz.class);
@@ -283,9 +297,11 @@ class TestRead_CR {
             marshaller.setProperty(Marshaller.JAXB_ENCODING, "ISO-8859-15"); //"UTF-8"
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(quiz, file);
+            System.out.println("###### File was successfully converted ######");
             JOptionPane.showMessageDialog(null, "Conversion done!   Please check your file on this path:\n"+file);            
         } catch (JAXBException e) {
             JOptionPane.showMessageDialog(null, "Error in marshalling..."+e.toString());
+            System.out.println("###### Error in marshalling..."+e.toString()+" ######");
         }  
     }
     
@@ -349,16 +365,19 @@ class TestRead_CR {
         String assertion = str.trim();
         String[] result = new String[2];
         if(assertion.startsWith("Equals(")){
+            System.out.println("    -Converting AssertEquals...");
             String tmp = assertion.replaceAll("^Equals\\(|\\);$", "");
             String[] tmp2 = tmp.split(",");
             result[0] = tmp2[0].replaceAll("^\"|\"$", "");
             result[1] = tmp2[1].trim();
         }
         if(assertion.startsWith("True(")){
+            System.out.println("    -Converting AssertTrue...");
             result[0] = "true";
             result[1] = assertion.replaceAll("^True\\(|\\);$", "");
         }
         if(assertion.startsWith("False(")){
+            System.out.println("    -Converting AssertFalse...");
             result[0] = "false";
             result[1] = assertion.replaceAll("^False\\(|\\);$", "");
         }

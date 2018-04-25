@@ -5,15 +5,14 @@
  */
 package javaapplication2;
 
+
 import java.io.File;
-import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import javax.swing.SwingUtilities;
+import javax.swing.JOptionPane;
 /**
  *
  * @author foufou
@@ -25,11 +24,14 @@ public class MainForm extends javax.swing.JFrame {
      */
     public MainForm() {
         initComponents();
-//        LatexFilePath.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\JavaApplication2\\quizW4[2075].tex.txt");
-//        ClassFilePath.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\WebApplication1\\test\\sum.java");
-//        TestClassFilePath.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\WebApplication1\\test\\sumTest.java");
-//        LatexOutputFilePath.setText("D:\\LatexQuiz.xml");
-//        ClassOutputFilePath.setText("D:\\CodeRunnerQuiz.xml");
+
+        Console console = new Console();
+        console.run();
+        LatexFilePath.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\JavaApplication2\\quizW4[2075].tex.txt");
+        ClassFilePath.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\WebApplication1\\test\\sum.java");
+        TestClassFilePath.setText("C:\\Users\\foufou\\Documents\\NetBeansProjects\\WebApplication1\\test\\sumTest.java");
+        LatexOutputFilePath.setText("D:\\LatexQuiz.xml");
+        ClassOutputFilePath.setText("D:\\CodeRunnerQuiz.xml");
     }
 
     /**
@@ -249,24 +251,37 @@ public class MainForm extends javax.swing.JFrame {
 
     private void ConvertLatexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConvertLatexActionPerformed
         // TODO add your handling code here:
-        String stin = LatexFilePath.getText();
-        String stout = LatexOutputFilePath.getText();
-        TestRead tr = new TestRead(stin, stout);
-        //run();
-       
+        if(("".equals(LatexFilePath.getText()))||(LatexFilePath.getText() == null)){
+            JOptionPane.showMessageDialog(null, "Please enter the path of the source/Latex file");
+        }else if(("".equals(LatexOutputFilePath.getText()))||(LatexOutputFilePath.getText() == null)){
+            JOptionPane.showMessageDialog(null, "Please enter the destination of the output/Xml file");
+        }else {
+            String stin = LatexFilePath.getText();
+            String stout = LatexOutputFilePath.getText();
+            ConvertLatex cL = new ConvertLatex(stin, stout);
+        }      
     }//GEN-LAST:event_ConvertLatexActionPerformed
 
     private void ConvertCRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConvertCRActionPerformed
         // TODO add your handling code here:
-        String Classpath = ClassFilePath.getText();
-        String Testpath = TestClassFilePath.getText();
-        String Outputpath = ClassOutputFilePath.getText();
-        try {
-            TestRead_CR tr_cr = new TestRead_CR(Classpath, Testpath, Outputpath);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        if(("".equals(ClassFilePath.getText()))||(ClassFilePath.getText() == null)){
+            JOptionPane.showMessageDialog(null, "Please enter the path of the Java Class");
+        }else if(("".equals(TestClassFilePath.getText()))||(TestClassFilePath.getText() == null)){
+            JOptionPane.showMessageDialog(null, "Please enter the path of the Java Test Class");
+        }else if(("".equals(ClassOutputFilePath.getText()))||(ClassOutputFilePath.getText() == null)){
+            JOptionPane.showMessageDialog(null, "Please enter the destination of the output/Xml file");
+        }else {
+            String Classpath = ClassFilePath.getText();
+            String Testpath = TestClassFilePath.getText();
+            String Outputpath = ClassOutputFilePath.getText();
+            try {
+                ConvertJava cJ = new ConvertJava(Classpath, Testpath, Outputpath);
+
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_ConvertCRActionPerformed
 
@@ -361,62 +376,10 @@ public class MainForm extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainForm().setVisible(true);
+
             }
         });
     }
-    
-    //The run method is just a method I create to test the output. You can call it in the constructor methods after initComponents(); , or you can try to do a System.out.println(); in the about box action
- 
- public void run()
-    {
-        redirectSystemStreams();
-        System.out.println("THIS IS A DEMO FOR REDIRECTING OUTPUT TO GUI");
- 
-                 
-        System.out.println("--------------------------------------------");
-         
-        for(int i = 0; i < 30; i++)
-        {
-            System.out.print(Math.random()+"\t");
-            System.out.println("<<End");
-        }
-         
-        System.out.println("--------------------------------------------");
-         
-                    
-    }
-     
-//The following codes set where the text get redirected. In this case, jTextArea1    
-  public void updateTextArea(final String text) {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        VirtualConsolArea.append(text);
-      }
-    });
-  }
- 
-//Followings are The Methods that do the Redirect, you can simply Ignore them. 
-  private void redirectSystemStreams() {
-    OutputStream out = new OutputStream() {
-      @Override
-      public void write(int b) throws IOException {
-        updateTextArea(String.valueOf((char) b));
-      }
- 
-      @Override
-      public void write(byte[] b, int off, int len) throws IOException {
-        updateTextArea(new String(b, off, len));
-      }
- 
-      @Override
-      public void write(byte[] b) throws IOException {
-        write(b, 0, b.length);
-      }
-    };
- 
-    System.setOut(new PrintStream(out, true));
-    System.setErr(new PrintStream(out, true));
-  }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CROutputFC;
