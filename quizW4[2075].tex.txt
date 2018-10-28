@@ -9,7 +9,7 @@
 
 \begin{document}
 %\newcommand{\multichoiceparams} [1]{$$#1$$}
-
+\newcommand\foo{}
 \newcommand\question[1]%
     {\def\domyverb##1#1{\vspace{1cm} QUESTION: $`##1'$}%
      \domyverb}
